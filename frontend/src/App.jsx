@@ -1,122 +1,236 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import React, { useState, useEffect } from 'react';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import JobCard from './components/JobCard';
+import HackathonCard from './components/HackathonCard';
+import ResumeAnalyzer from './components/ResumeAnalyzer';
+import PostModal from './components/PostModal';
+import { fetchHealth, fetchJobs, fetchHackathons } from './services/api';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [activeTab, setActiveTab] = useState('jobs'); // 'jobs', 'hackathons', 'ai'
+  const [apiStatus, setApiStatus] = useState('checking');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState('All');
+  
+  const [jobs, setJobs] = useState([]);
+  const [hackathons, setHackathons] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const [userSkills, setUserSkills] = useState([]);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+
+  // Check Backend Health
+  useEffect(() => {
+    fetchHealth().then(res => {
+      setApiStatus(res.status);
+    });
+  }, []);
+
+  // Load Data based on Tab & Search/Filter
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      if (activeTab === 'jobs') {
+        const data = await fetchJobs({
+          search: searchQuery,
+          job_type: selectedFilter,
+          user_skills: userSkills.join(',')
+        });
+        setJobs(data);
+      } else if (activeTab === 'hackathons') {
+        const data = await fetchHackathons({
+          search: searchQuery,
+          mode: selectedFilter
+        });
+        setHackathons(data);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [activeTab, searchQuery, selectedFilter, userSkills]);
+
+  const handleApplySkillsToFilter = (skills) => {
+    setUserSkills(skills);
+    setActiveTab('jobs');
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div style={{ paddingBottom: '60px' }}>
+      
+      {/* Header & Navigation */}
+      <Navbar
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        apiStatus={apiStatus}
+        onOpenPostModal={() => setIsPostModalOpen(true)}
+      />
 
-      <div className="ticks"></div>
+      {/* Hero Section */}
+      <Hero
+        activeTab={activeTab}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        selectedFilter={selectedFilter}
+        setSelectedFilter={setSelectedFilter}
+      />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      {/* Main Content Area */}
+      <main style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
+        
+        {/* User Skills Badge Indicator */}
+        {userSkills.length > 0 && activeTab === 'jobs' && (
+          <div className="glass-panel" style={{ padding: '12px 20px', marginBottom: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#6ee7b7' }}>✨ Matched with your Resume Skills:</span>
+              {userSkills.map((s, idx) => (
+                <span key={idx} className="badge badge-emerald" style={{ fontSize: '0.75rem' }}>{s}</span>
+              ))}
+            </div>
+            <button
+              onClick={() => setUserSkills([])}
+              style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.8rem' }}
+            >
+              Clear Filter ✕
+            </button>
+          </div>
+        )}
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        {/* Tab 1: Jobs */}
+        {activeTab === 'jobs' && (
+          <div>
+            {loading ? (
+              <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-secondary)' }}>
+                ⚡ Loading Jobs from Backend...
+              </div>
+            ) : jobs.length === 0 ? (
+              <div className="glass-panel" style={{ textAlign: 'center', padding: '60px' }}>
+                <h3>No jobs matching your search.</h3>
+                <p style={{ color: 'var(--text-muted)' }}>Try broadening your search query or check back soon!</p>
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '24px' }}>
+                {jobs.map(job => (
+                  <JobCard key={job.id} job={job} onSelect={setSelectedJob} />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Tab 2: Hackathons */}
+        {activeTab === 'hackathons' && (
+          <div>
+            {loading ? (
+              <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-secondary)' }}>
+                ⚡ Loading Hackathons...
+              </div>
+            ) : hackathons.length === 0 ? (
+              <div className="glass-panel" style={{ textAlign: 'center', padding: '60px' }}>
+                <h3>No hackathons found.</h3>
+                <p style={{ color: 'var(--text-muted)' }}>Check back soon for new hackathon releases!</p>
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '24px' }}>
+                {hackathons.map(hack => (
+                  <HackathonCard key={hack.id} hackathon={hack} />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Tab 3: AI Resume & Roadmap */}
+        {activeTab === 'ai' && (
+          <ResumeAnalyzer onApplySkillsToFilter={handleApplySkillsToFilter} />
+        )}
+
+      </main>
+
+      {/* Job Details Drawer Modal */}
+      {selectedJob && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(0, 0, 0, 0.75)',
+          backdropFilter: 'blur(8px)',
+          display: 'flex',
+          justifyContent: 'flex-end',
+          zIndex: 999
+        }}>
+          <div className="glass-panel" style={{
+            width: '100%',
+            maxWidth: '540px',
+            height: '100%',
+            borderRadius: 0,
+            padding: '32px',
+            overflowY: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between'
+          }}>
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <span className="badge badge-emerald">🎯 {selectedJob.match_score || 85}% Match</span>
+                <button
+                  onClick={() => setSelectedJob(null)}
+                  style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', fontSize: '1.5rem', cursor: 'pointer' }}
+                >
+                  ✕
+                </button>
+              </div>
+
+              <h2 style={{ fontSize: '1.6rem', fontWeight: '800', marginBottom: '6px' }}>{selectedJob.title}</h2>
+              <div style={{ color: 'var(--text-secondary)', marginBottom: '16px', fontSize: '0.95rem' }}>
+                🏢 {selectedJob.company} • 📍 {selectedJob.location} ({selectedJob.job_type})
+              </div>
+
+              <div style={{ background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '10px', marginBottom: '20px' }}>
+                <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Salary Package:</div>
+                <div style={{ fontSize: '1.2rem', fontWeight: '700', color: '#a5b4fc' }}>{selectedJob.salary_range}</div>
+              </div>
+
+              <h4 style={{ fontSize: '1rem', fontWeight: '700', marginBottom: '8px' }}>Job Overview</h4>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.7', marginBottom: '24px' }}>
+                {selectedJob.description}
+              </p>
+
+              <h4 style={{ fontSize: '1rem', fontWeight: '700', marginBottom: '10px' }}>Required Tech Stack</h4>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '32px' }}>
+                {(selectedJob.skills || []).map((s, idx) => (
+                  <span key={idx} className="badge badge-indigo">{s}</span>
+                ))}
+              </div>
+            </div>
+
+            <a
+              href={selectedJob.application_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary"
+              style={{ width: '100%', justifyContent: 'center', padding: '14px', fontSize: '1rem', textDecoration: 'none' }}
+            >
+              Apply Directly on Company Portal 🚀
+            </a>
+          </div>
+        </div>
+      )}
+
+      {/* Post Job/Hackathon Modal */}
+      <PostModal
+        isOpen={isPostModalOpen}
+        onClose={() => setIsPostModalOpen(false)}
+        onRefresh={loadData}
+      />
+
+    </div>
+  );
 }
-
-export default App

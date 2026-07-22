@@ -1,0 +1,112 @@
+from sqlalchemy.orm import Session
+from app.models.db_models import Job, Hackathon
+
+SEED_JOBS = [
+    {
+        "title": "Senior Full Stack AI Developer",
+        "company": "Cognitive Cloud AI",
+        "location": "Remote (US/Global)",
+        "job_type": "Full-time",
+        "experience_level": "Senior",
+        "salary_range": "$140,000 - $185,000",
+        "description": "Join our core engineering team to build scalable FastAPI services, integrate Gemini / Claude LLMs, and craft high-performance React user experiences.",
+        "skills": ["Python", "FastAPI", "React", "TypeScript", "Docker", "PostgreSQL"],
+        "application_url": "https://careers.cognitivecloud.ai/apply/sr-ai-dev",
+        "is_remote": True
+    },
+    {
+        "title": "Frontend Engineer (React & Next.js)",
+        "company": "Verve Technologies",
+        "location": "San Francisco, CA / Hybrid",
+        "job_type": "Full-time",
+        "experience_level": "Mid-Level",
+        "salary_range": "$120,000 - $150,000",
+        "description": "Looking for a creative frontend engineer to build responsive dashboards, rich micro-animations, and real-time WebSocket visualizations.",
+        "skills": ["React", "TypeScript", "TailwindCSS", "Next.js", "Redux", "REST API"],
+        "application_url": "https://verve.tech/careers/frontend",
+        "is_remote": True
+    },
+    {
+        "title": "Backend Microservices Developer",
+        "company": "Nexus Systems",
+        "location": "Austin, TX / Remote",
+        "job_type": "Contract",
+        "experience_level": "Mid-Level",
+        "salary_range": "$75 - $95 / hr",
+        "description": "Architect async microservices using FastAPI, SQLAlchemy 2.0, Redis caching, and Kubernetes deployments.",
+        "skills": ["Python", "FastAPI", "SQL", "Redis", "Docker", "Kubernetes", "AWS"],
+        "application_url": "https://nexus-systems.io/jobs/backend-contract",
+        "is_remote": True
+    },
+    {
+        "title": "AI Research & Systems Intern",
+        "company": "Mind Labs AI",
+        "location": "Boston, MA",
+        "job_type": "Internship",
+        "experience_level": "Entry",
+        "salary_range": "$40 - $55 / hr",
+        "description": "Exciting internship opportunity for students and recent grads to experiment with RAG architectures, PyTorch fine-tuning, and LLM evaluation benchmarks.",
+        "skills": ["Python", "PyTorch", "Machine Learning", "Git", "REST API"],
+        "application_url": "https://mindlabs.ai/internships",
+        "is_remote": False
+    }
+]
+
+SEED_HACKATHONS = [
+    {
+        "title": "Global AI Agents & LLM Hackathon 2026",
+        "organizer": "BuildLab & Google Cloud",
+        "mode": "Online",
+        "prize_pool": "$50,000 USD",
+        "start_date": "Aug 15, 2026",
+        "end_date": "Aug 18, 2026",
+        "tags": ["AI", "Gemini", "Agents", "Global"],
+        "description": "Build next-generation autonomous AI agents and multimodal workflows. Top winners gain direct access to VC funding and cloud credits.",
+        "registration_url": "https://ai-agents-hack.devpost.com",
+        "banner_url": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop&q=60",
+        "is_featured": True
+    },
+    {
+        "title": "Full-Stack DevFest & Fast API Challenge",
+        "organizer": "TechCraft Community",
+        "mode": "Online",
+        "prize_pool": "$25,000 USD",
+        "start_date": "Sep 01, 2026",
+        "end_date": "Sep 05, 2026",
+        "tags": ["FastAPI", "React", "Open Source", "Beginner Friendly"],
+        "description": "Create modern web applications using FastAPI, React, and serverless infrastructure. Free mentorship workshops available during the hackathon.",
+        "registration_url": "https://techcraft.org/devfest-2026",
+        "banner_url": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&auto=format&fit=crop&q=60",
+        "is_featured": True
+    },
+    {
+        "title": "Silicon Valley Hack-for-Impact",
+        "organizer": "Innovation Guild SF",
+        "mode": "In-Person",
+        "prize_pool": "$30,000 USD",
+        "start_date": "Sep 20, 2026",
+        "end_date": "Sep 22, 2026",
+        "tags": ["In-Person", "Social Good", "HealthTech", "Climate"],
+        "description": "48-hour in-person hackathon in San Francisco focused on solving urgent challenges in climate tech, healthcare access, and education.",
+        "registration_url": "https://sfhackforimpact.org",
+        "banner_url": "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&auto=format&fit=crop&q=60",
+        "is_featured": False
+    }
+]
+
+def seed_database(db: Session):
+    # Check if jobs exist
+    if db.query(Job).count() == 0:
+        for job_data in SEED_JOBS:
+            job = Job(**job_data)
+            db.add(job)
+        db.commit()
+        print("Database seeded with initial jobs!")
+
+    # Check if hackathons exist
+    if db.query(Hackathon).count() == 0:
+        for hack_data in SEED_HACKATHONS:
+            hack = Hackathon(**hack_data)
+            db.add(hack)
+        db.commit()
+        print("Database seeded with initial hackathons!")
