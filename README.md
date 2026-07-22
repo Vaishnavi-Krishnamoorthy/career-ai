@@ -112,3 +112,10 @@ python -m pytest tests/
 ## 📝 License
 
 Distributed under the MIT License. See `LICENSE` for details.
+
+---
+
+## 👥 Author
+
+* **Sivakumar Vaishnavi** - *Initial Work & Architecture* - [Vaishnavi-Krishnamoorthy](https://github.com/Vaishnavi-Krishnamoorthy)
+
