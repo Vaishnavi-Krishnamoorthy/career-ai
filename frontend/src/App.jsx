@@ -4,6 +4,7 @@ import Hero from './components/Hero';
 import JobCard from './components/JobCard';
 import HackathonCard from './components/HackathonCard';
 import ResumeAnalyzer from './components/ResumeAnalyzer';
+import InterviewPrep from './components/InterviewPrep';
 import NotificationsModal from './components/NotificationsModal';
 import PostModal from './components/PostModal';
 import {
@@ -252,6 +253,11 @@ export default function App() {
         {/* Tab 4: AI Resume & Roadmap */}
         {activeTab === 'ai' && (
           <ResumeAnalyzer onApplySkillsToFilter={handleApplySkillsToFilter} />
+        )}
+
+        {/* Tab 5: AI Interview Prep */}
+        {activeTab === 'interview' && (
+          <InterviewPrep />
         )}
 
       </main>
