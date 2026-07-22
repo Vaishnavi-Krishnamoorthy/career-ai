@@ -30,8 +30,10 @@ export default function Hero({ activeTab, searchQuery, setSearchQuery, selectedF
 
         <h2 style={{ fontSize: '2.6rem', fontWeight: '800', letterSpacing: '-0.02em', marginBottom: '12px' }}>
           {activeTab === 'jobs' && <>Find Your Dream <span className="gradient-text">AI & Tech Role</span></>}
+          {activeTab === 'matches' && <>Skill Matched <span className="gradient-text">Live Remote Jobs</span></>}
           {activeTab === 'hackathons' && <>Compete & Win at <span className="gradient-text">Global Hackathons</span></>}
           {activeTab === 'ai' && <>AI Powered <span className="gradient-text">Resume & Skill Roadmap</span></>}
+          {activeTab === 'interview' && <>Tailored <span className="gradient-text">AI Interview Practice</span></>}
         </h2>
 
         <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', marginBottom: '28px' }}>
@@ -39,7 +41,7 @@ export default function Hero({ activeTab, searchQuery, setSearchQuery, selectedF
         </p>
 
         {/* Global Search Input */}
-        {activeTab !== 'ai' && (
+        {activeTab !== 'ai' && activeTab !== 'interview' && (
           <div style={{
             display: 'flex',
             alignItems: 'center',
