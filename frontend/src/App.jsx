@@ -4,23 +4,40 @@ import Hero from './components/Hero';
 import JobCard from './components/JobCard';
 import HackathonCard from './components/HackathonCard';
 import ResumeAnalyzer from './components/ResumeAnalyzer';
+import NotificationsModal from './components/NotificationsModal';
 import PostModal from './components/PostModal';
-import { fetchHealth, fetchJobs, fetchHackathons } from './services/api';
+import {
+  fetchHealth,
+  fetchJobs,
+  fetchHackathons,
+  fetchExternalJobs,
+  getUserProfile
+} from './services/api';
 import './App.css';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('jobs'); // 'jobs', 'hackathons', 'ai'
+  const [activeTab, setActiveTab] = useState('jobs'); // 'jobs', 'matches', 'hackathons', 'ai'
   const [apiStatus, setApiStatus] = useState('checking');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('All');
   
   const [jobs, setJobs] = useState([]);
+  const [matchedJobs, setMatchedJobs] = useState([]);
   const [hackathons, setHackathons] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [userSkills, setUserSkills] = useState([]);
+  // Lazy initialize state from localStorage
+  const [userSkills, setUserSkills] = useState(() => {
+    const savedProfile = getUserProfile();
+    return (savedProfile && savedProfile.skills) ? savedProfile.skills : [];
+  });
+  
   const [selectedJob, setSelectedJob] = useState(null);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+
+  // Notification state
+  const [notifications, setNotifications] = useState([]);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
   // Check Backend Health
   useEffect(() => {
@@ -31,7 +48,7 @@ export default function App() {
 
   // Load Data based on Tab & Search/Filter
   const loadData = useCallback(async () => {
-    Promise.resolve().then(() => setLoading(true));
+    setLoading(true);
     try {
       if (activeTab === 'jobs') {
         const data = await fetchJobs({
@@ -40,6 +57,12 @@ export default function App() {
           user_skills: userSkills.join(',')
         });
         setJobs(data);
+      } else if (activeTab === 'matches') {
+        const extJobs = await fetchExternalJobs({
+          search: searchQuery,
+          user_skills: userSkills.join(',')
+        });
+        setMatchedJobs(extJobs);
       } else if (activeTab === 'hackathons') {
         const data = await fetchHackathons({
           search: searchQuery,
@@ -48,21 +71,74 @@ export default function App() {
         setHackathons(data);
       }
     } catch (err) {
-      console.error(err);
+      console.error('Error loading data:', err);
     } finally {
       setLoading(false);
     }
   }, [activeTab, searchQuery, selectedFilter, userSkills]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    loadData();
+    const timer = setTimeout(() => {
+      loadData();
+    }, 0);
+    return () => clearTimeout(timer);
   }, [loadData]);
+
+  // Periodic 30-minute background job checker
+  useEffect(() => {
+    const checkNewJobMatches = async () => {
+      if (!userSkills || userSkills.length === 0) return;
+      try {
+        const liveJobs = await fetchExternalJobs({ user_skills: userSkills.join(',') });
+        const highMatches = liveJobs.filter(j => (j.match_score || 0) >= 80);
+
+        if (highMatches.length > 0) {
+          const newNotifs = highMatches.slice(0, 3).map(j => ({
+            id: `notif-${j.id}-${Date.now()}`,
+            job_id: j.id,
+            job_title: j.title,
+            company: j.company,
+            match_score: j.match_score || 85,
+            application_url: j.application_url,
+            created_at: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            read: false
+          }));
+
+          setNotifications(prev => [...newNotifs, ...prev]);
+
+          // Browser Push Notification trigger if granted
+          if ('Notification' in window && Notification.permission === 'granted') {
+            const top = highMatches[0];
+            new Notification(`🎯 New Job Match: ${top.title}`, {
+              body: `${top.company} is hiring! ${top.match_score}% skill match with your profile.`,
+              icon: '/favicon.ico'
+            });
+          }
+        }
+      } catch (err) {
+        console.warn('Background job check error:', err);
+      }
+    };
+
+    checkNewJobMatches();
+    const interval = setInterval(checkNewJobMatches, 30 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [userSkills]);
 
   const handleApplySkillsToFilter = (skills) => {
     setUserSkills(skills);
-    setActiveTab('jobs');
+    setActiveTab('matches');
   };
+
+  const handleMarkAsRead = (notifId) => {
+    setNotifications(prev => prev.map(n => n.id === notifId ? { ...n, read: true } : n));
+  };
+
+  const handleMarkAllAsRead = () => {
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+  };
+
+  const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
     <div style={{ paddingBottom: '60px' }}>
@@ -73,6 +149,8 @@ export default function App() {
         setActiveTab={setActiveTab}
         apiStatus={apiStatus}
         onOpenPostModal={() => setIsPostModalOpen(true)}
+        unreadCount={unreadCount}
+        onToggleNotifications={() => setIsNotificationsOpen(!isNotificationsOpen)}
       />
 
       {/* Hero Section */}
@@ -88,10 +166,10 @@ export default function App() {
       <main style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
         
         {/* User Skills Badge Indicator */}
-        {userSkills.length > 0 && activeTab === 'jobs' && (
+        {userSkills.length > 0 && (activeTab === 'jobs' || activeTab === 'matches') && (
           <div className="glass-panel" style={{ padding: '12px 20px', marginBottom: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#6ee7b7' }}>✨ Matched with your Resume Skills:</span>
+              <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#6ee7b7' }}>✨ Matched with your Resume Skills ({userSkills.length}):</span>
               {userSkills.map((s, idx) => (
                 <span key={idx} className="badge badge-emerald" style={{ fontSize: '0.75rem' }}>{s}</span>
               ))}
@@ -105,7 +183,7 @@ export default function App() {
           </div>
         )}
 
-        {/* Tab 1: Jobs */}
+        {/* Tab 1: Jobs Search */}
         {activeTab === 'jobs' && (
           <div>
             {loading ? (
@@ -127,7 +205,29 @@ export default function App() {
           </div>
         )}
 
-        {/* Tab 2: Hackathons */}
+        {/* Tab 2: Job Matches (Remotive API + Skill Relevance) */}
+        {activeTab === 'matches' && (
+          <div>
+            {loading ? (
+              <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-secondary)' }}>
+                🎯 Fetching & Calculating Skill Matched Remote Jobs...
+              </div>
+            ) : matchedJobs.length === 0 ? (
+              <div className="glass-panel" style={{ textAlign: 'center', padding: '60px' }}>
+                <h3>No matching remote jobs found.</h3>
+                <p style={{ color: 'var(--text-muted)' }}>Upload your resume in AI Resume tab to automatically match live listings!</p>
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '24px' }}>
+                {matchedJobs.map(job => (
+                  <JobCard key={job.id} job={job} onSelect={setSelectedJob} />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Tab 3: Hackathons */}
         {activeTab === 'hackathons' && (
           <div>
             {loading ? (
@@ -149,7 +249,7 @@ export default function App() {
           </div>
         )}
 
-        {/* Tab 3: AI Resume & Roadmap */}
+        {/* Tab 4: AI Resume & Roadmap */}
         {activeTab === 'ai' && (
           <ResumeAnalyzer onApplySkillsToFilter={handleApplySkillsToFilter} />
         )}
@@ -224,6 +324,15 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* Notifications Drawer Modal */}
+      <NotificationsModal
+        isOpen={isNotificationsOpen}
+        onClose={() => setIsNotificationsOpen(false)}
+        notifications={notifications}
+        onMarkAsRead={handleMarkAsRead}
+        onMarkAllAsRead={handleMarkAllAsRead}
+      />
 
       {/* Post Job/Hackathon Modal */}
       <PostModal

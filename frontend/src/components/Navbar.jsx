@@ -1,5 +1,11 @@
-
-export default function Navbar({ activeTab, setActiveTab, apiStatus, onOpenPostModal }) {
+export default function Navbar({
+  activeTab,
+  setActiveTab,
+  apiStatus,
+  onOpenPostModal,
+  unreadCount = 0,
+  onToggleNotifications
+}) {
   return (
     <header className="glass-panel" style={{ margin: '16px auto', maxWidth: '1280px', padding: '14px 24px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
@@ -25,7 +31,7 @@ export default function Navbar({ activeTab, setActiveTab, apiStatus, onOpenPostM
               Career AI
             </h1>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: '500' }}>
-              Jobs • Hackathons • AI Match
+              Jobs • OCR Resume • AI Match
             </span>
           </div>
         </div>
@@ -38,6 +44,13 @@ export default function Navbar({ activeTab, setActiveTab, apiStatus, onOpenPostM
             style={{ padding: '8px 16px', fontSize: '0.9rem' }}
           >
             💼 Jobs Search
+          </button>
+          <button
+            onClick={() => setActiveTab('matches')}
+            className={activeTab === 'matches' ? 'btn-primary' : 'btn-secondary'}
+            style={{ padding: '8px 16px', fontSize: '0.9rem' }}
+          >
+            🎯 Job Matches
           </button>
           <button
             onClick={() => setActiveTab('hackathons')}
@@ -57,6 +70,40 @@ export default function Navbar({ activeTab, setActiveTab, apiStatus, onOpenPostM
 
         {/* Right Action & Health Indicator */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          {/* Notification Bell Icon */}
+          <button
+            onClick={onToggleNotifications}
+            className="btn-secondary"
+            style={{
+              position: 'relative',
+              padding: '8px 12px',
+              fontSize: '1.1rem',
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            title="Notifications & Job Alerts"
+          >
+            🔔
+            {unreadCount > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: '-4px',
+                right: '-4px',
+                background: '#ef4444',
+                color: '#ffffff',
+                fontSize: '0.7rem',
+                fontWeight: 'bold',
+                borderRadius: '10px',
+                padding: '2px 6px',
+                lineHeight: 1
+              }}>
+                {unreadCount}
+              </span>
+            )}
+          </button>
+
           <div style={{
             display: 'flex',
             alignItems: 'center',

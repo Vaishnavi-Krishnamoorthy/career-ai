@@ -89,3 +89,42 @@ class UserProfileResponse(UserProfileCreate):
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+# 18-Field Parsed Profile Schema
+class ParsedProfile(BaseModel):
+    full_name: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    address: Optional[str] = None
+    education: Optional[str] = None
+    college: Optional[str] = None
+    degree: Optional[str] = None
+    cgpa: Optional[str] = None
+    skills: List[str] = []
+    programming_languages: List[str] = []
+    projects: List[str] = []
+    certifications: List[str] = []
+    internship_experience: Optional[str] = None
+    work_experience: Optional[str] = None
+    languages_known: List[str] = []
+    linkedin_url: Optional[str] = None
+    github_url: Optional[str] = None
+    portfolio_url: Optional[str] = None
+
+class OCRResponse(BaseModel):
+    raw_text: str
+    confidence: float = 0.95
+    parsed_profile: ParsedProfile
+
+class JobNotification(BaseModel):
+    id: str
+    job_id: str
+    job_title: str
+    company: str
+    match_score: int
+    created_at: str
+    read: bool = False
+
+class ProfileSaveRequest(BaseModel):
+    profile: ParsedProfile
+

@@ -86,3 +86,36 @@ def test_ai_career_roadmap():
         data = response.json()
         assert data["target_role"] == "AI Solutions Architect"
         assert len(data["steps"]) > 0
+
+def test_ai_parse_resume_text():
+    with TestClient(app) as client:
+        payload = {
+            "resume_text": "Alex Morgan\nalex.morgan@example.com\nPhone: +1 555-0199\nEducation: B.Tech in Computer Science at MIT, CGPA 3.9\nSkills: Python, JavaScript, React, FastAPI, SQL, Git, Docker."
+        }
+        response = client.post("/api/v1/ai/parse-resume-text", json=payload)
+        assert response.status_code == 200
+        data = response.json()
+        assert data["full_name"] is not None
+        assert data["email"] == "alex.morgan@example.com"
+        assert "Python" in data["skills"]
+        assert data["cgpa"] is not None
+
+def test_ai_parse_resume_file():
+    with TestClient(app) as client:
+        fake_file = ("resume.pdf", b"%PDF-1.4 Fake PDF content for testing OCR parse", "application/pdf")
+        response = client.post("/api/v1/ai/parse-resume-file", files={"file": fake_file})
+        assert response.status_code == 200
+        data = response.json()
+        assert "raw_text" in data
+        assert "parsed_profile" in data
+        assert isinstance(data["parsed_profile"]["skills"], list)
+
+def test_external_jobs():
+    with TestClient(app) as client:
+        response = client.get("/api/v1/ai/external-jobs?user_skills=Python,React")
+        assert response.status_code == 200
+        jobs = response.json()
+        assert isinstance(jobs, list)
+        assert len(jobs) > 0
+        assert "match_score" in jobs[0]
+

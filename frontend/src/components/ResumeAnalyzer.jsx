@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { analyzeResume, generateRoadmap } from '../services/api';
+import ResumeUploadCard from './ResumeUploadCard';
 
 export default function ResumeAnalyzer({ onApplySkillsToFilter }) {
   const [resumeText, setResumeText] = useState('');
@@ -9,6 +10,17 @@ export default function ResumeAnalyzer({ onApplySkillsToFilter }) {
   const [roadmap, setRoadmap] = useState(null);
   const [roadmapLoading, setRoadmapLoading] = useState(false);
 
+  const handleProfileParsed = (profile) => {
+    if (profile && profile.skills && profile.skills.length > 0) {
+      if (onApplySkillsToFilter) {
+        onApplySkillsToFilter(profile.skills);
+      }
+      setResumeText(
+        `Name: ${profile.full_name || ''}\nEmail: ${profile.email || ''}\nPhone: ${profile.phone || ''}\nEducation: ${profile.education || ''}\nSkills: ${(profile.skills || []).join(', ')}\nProjects: ${(profile.projects || []).join('; ')}`
+      );
+    }
+  };
+
   const handleAnalyze = async () => {
     if (!resumeText.trim()) return;
     setLoading(true);
@@ -16,7 +28,7 @@ export default function ResumeAnalyzer({ onApplySkillsToFilter }) {
     try {
       const res = await analyzeResume(resumeText, targetRole);
       setResult(res);
-      if (res.skills_found && res.skills_found.length > 0) {
+      if (res.skills_found && res.skills_found.length > 0 && onApplySkillsToFilter) {
         onApplySkillsToFilter(res.skills_found);
       }
     } catch (err) {
@@ -52,12 +64,20 @@ Languages & Frameworks: Python, JavaScript, TypeScript, FastAPI, React, Redux, N
   return (
     <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
       
-      {/* Input Section */}
+      {/* 1. OCR File Drag & Drop Card */}
+      <div style={{ marginBottom: '32px' }}>
+        <ResumeUploadCard
+          onProfileParsed={handleProfileParsed}
+          onSkillsUpdated={(skills) => onApplySkillsToFilter && onApplySkillsToFilter(skills)}
+        />
+      </div>
+
+      {/* 2. Text Input & Quick AI Analysis Section */}
       <div className="glass-panel" style={{ padding: '32px', marginBottom: '32px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
           <div>
             <h3 style={{ fontSize: '1.4rem', fontWeight: '800' }}>
-              ✨ AI Resume & Skill Analyzer
+              ✨ AI Skill Gap & Career Roadmap Analyzer
             </h3>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
               Paste your resume or bio below to extract skills, calculate job match scores, and generate custom learning roadmaps.
