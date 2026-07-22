@@ -210,6 +210,7 @@ export default function ResumeUploadCard({ onProfileParsed, onSkillsUpdated }) {
             <span className="badge-success text-xs font-bold">✓ 18 Profile Fields Extracted</span>
             <div className="action-buttons-gap">
               <button onClick={handleSaveProfile} className="btn-primary text-xs">💾 Save Profile</button>
+              <button onClick={() => onSkillsUpdated && onSkillsUpdated(profile.skills || [])} className="btn-secondary text-xs">🎯 View Matched Jobs ➔</button>
               <button onClick={() => { setProfile(null); setStepIndex(0); }} className="btn-outline text-xs">🔄 Re-upload</button>
             </div>
           </div>
