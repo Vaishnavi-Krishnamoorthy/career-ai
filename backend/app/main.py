@@ -30,10 +30,13 @@ app = FastAPI(
 
 # CORS Middleware setup
 origins = [origin.strip() for origin in settings.CORS_ORIGINS.split(",") if origin.strip()]
+is_wildcard = "*" in origins or not origins
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins if origins else ["*"],
-    allow_credentials=True,
+    allow_origins=["*"] if is_wildcard else origins,
+    allow_origin_regex=r"https://.*\.onrender\.com",
+    allow_credentials=False if is_wildcard else True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
