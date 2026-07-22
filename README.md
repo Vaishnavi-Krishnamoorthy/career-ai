@@ -10,6 +10,7 @@
 - **🚀 Hackathon Discovery**: Curation of global online and in-person hackathons filterable by mode, prize pool, and tech tags (AI, Web3, FastAPI, Open Source).
 - **📄 AI Resume Analyzer**: Paste resume text to extract skills, experience levels, key strengths, and role gap analysis.
 - **🗺️ Interactive Career Roadmap**: Automatically generates step-by-step learning milestones and curated resources for desired target roles.
+- **🎯 AI Interview Prep & Practice**: Tailored technical questions, system architecture scenarios, and sample response strategies for target job roles.
 - **🛡️ Multi-Tiered AI Service**: Native support for **Google Gemini API** (`google-genai`) with fallback heuristic analysis when offline.
 
 ---
@@ -106,6 +107,7 @@ python -m pytest tests/
 | `POST` | `/api/v1/hackathons` | Host/submit a new hackathon |
 | `POST` | `/api/v1/ai/analyze-resume` | Extract skills, gaps, & strengths from resume |
 | `POST` | `/api/v1/ai/career-roadmap` | Generate step-by-step learning roadmap |
+| `POST` | `/api/v1/ai/interview-prep` | Generate role-specific interview practice questions & tips |
 
 ---
 
@@ -115,7 +117,8 @@ Distributed under the MIT License. See `LICENSE` for details.
 
 ---
 
-## 👥 Author
+## 👥 Authors & Contributors
 
 * **Sivakumar Vaishnavi** - *Initial Work & Architecture* - [Vaishnavi-Krishnamoorthy](https://github.com/Vaishnavi-Krishnamoorthy)
+* **Varshini R** - *AI Interview Preparation Module & Feature Enhancements* - [varshinir1303](https://github.com/varshinir1303)
 

@@ -7,7 +7,9 @@ from app.models.schemas import (
     ResumeAnalysisResponse,
     CareerRoadmapResponse,
     RoadmapStep,
-    ParsedProfile
+    ParsedProfile,
+    InterviewPrepResponse,
+    InterviewQuestion
 )
 
 # List of common tech skills to extract via heuristic matching
@@ -314,6 +316,85 @@ class AIService:
             target_role=target,
             estimated_timeline="8 - 12 Weeks",
             steps=steps
+        )
+
+    def generate_interview_prep(self, target_role: str, experience_level: str = "Mid-Level", focus_skills: List[str] = None) -> InterviewPrepResponse:
+        """
+        Generates tailored interview practice questions, key concepts, and tips for a given role.
+        """
+        skills = focus_skills or ["Python", "System Design", "FastAPI", "React"]
+        skills_str = ", ".join(skills)
+        
+        if self.api_key:
+            try:
+                from google import genai
+                from google.genai import types
+                client = genai.Client(api_key=self.api_key)
+                prompt = f"""
+                Generate 4 technical and behavioral interview preparation questions with sample answer tips for a candidate interviewing for '{target_role}' at '{experience_level}' level.
+                Focus on these key skills: {skills_str}.
+                """
+                response = client.models.generate_content(
+                    model='gemini-2.5-flash',
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        response_mime_type="application/json",
+                        response_schema=InterviewPrepResponse
+                    )
+                )
+                text = response.text.strip()
+                if text.startswith("```"):
+                    start = text.find("{")
+                    end = text.rfind("}")
+                    if start != -1 and end != -1:
+                        text = text[start:end+1]
+                data = json.loads(text)
+                return InterviewPrepResponse(**data)
+            except Exception as e:
+                print(f"Gemini API interview prep fallback triggered due to: {e}")
+
+        # Heuristic / Default Response Fallback
+        questions = [
+            InterviewQuestion(
+                id=1,
+                category="System Architecture",
+                question=f"How would you design a scalable backend API for {target_role} using async processing and caching?",
+                key_concepts=["Async/Await", "Redis Caching", "Database Indexing", "Load Balancing"],
+                sample_answer_tips="Explain stateless API services, background task execution (Celery/FastAPI BackgroundTasks), and caching frequent query responses using Redis."
+            ),
+            InterviewQuestion(
+                id=2,
+                category="Technical Deep Dive",
+                question=f"Describe your experience with {skills[0] if skills else 'REST APIs'} and how you optimize performance under high latency.",
+                key_concepts=["Connection Pooling", "Query Optimization", "Pagination", "GZip Compression"],
+                sample_answer_tips="Discuss profiling bottlenecks, batching operations, database query optimization (EXPLAIN ANALYZE), and non-blocking IO."
+            ),
+            InterviewQuestion(
+                id=3,
+                category="Behavioral & Problem Solving",
+                question="Can you give an example of a challenging production bug you encountered and how you diagnosed it?",
+                key_concepts=["Root Cause Analysis", "Logging & Tracing", "Post-Mortem", "Graceful Degradation"],
+                sample_answer_tips="Use the STAR method (Situation, Task, Action, Result). Highlight diagnostic tooling, structured log inspection, and preventative unit tests."
+            ),
+            InterviewQuestion(
+                id=4,
+                category="AI & LLM Integration",
+                question="How do you handle API rate limits, error fallbacks, and response parsing when working with external LLM APIs?",
+                key_concepts=["Exponential Backoff", "Circuit Breakers", "Schema Validation", "Structured Outputs"],
+                sample_answer_tips="Focus on retry algorithms with jitter, strict Pydantic parsing, fallback heuristic algorithms, and client timeout configuration."
+            )
+        ]
+
+        return InterviewPrepResponse(
+            target_role=target_role,
+            experience_level=experience_level,
+            prep_summary=f"Tailored interview guide for {experience_level} {target_role} candidates focusing on {skills_str}.",
+            questions=questions,
+            key_takeaways=[
+                "Master asynchronous request handling and DB query optimization",
+                "Practice STAR format for behavioral scenarios with quantitative metrics",
+                "Be prepared to discuss edge cases and fallback strategies for AI services"
+            ]
         )
 
     def calculate_match_score(self, candidate_skills: List[str], required_skills: List[str]) -> int:

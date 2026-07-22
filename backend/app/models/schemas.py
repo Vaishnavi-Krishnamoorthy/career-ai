@@ -77,6 +77,25 @@ class CareerRoadmapResponse(BaseModel):
     estimated_timeline: str
     steps: List[RoadmapStep]
 
+class InterviewQuestion(BaseModel):
+    id: int
+    category: str
+    question: str
+    key_concepts: List[str]
+    sample_answer_tips: str
+
+class InterviewPrepRequest(BaseModel):
+    target_role: str = Field(..., description="Target role (e.g. AI Engineer, Full Stack Developer)")
+    experience_level: Optional[str] = Field("Mid-Level", description="Experience level")
+    focus_skills: List[str] = Field(default=[], description="Specific skills to focus interview questions on")
+
+class InterviewPrepResponse(BaseModel):
+    target_role: str
+    experience_level: str
+    prep_summary: str
+    questions: List[InterviewQuestion]
+    key_takeaways: List[str]
+
 class UserProfileCreate(BaseModel):
     full_name: str
     email: str

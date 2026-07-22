@@ -119,3 +119,26 @@ def test_external_jobs():
         assert len(jobs) > 0
         assert "match_score" in jobs[0]
 
+def test_ai_interview_prep():
+    with TestClient(app) as client:
+        payload = {
+            "target_role": "Lead Full Stack Developer",
+            "experience_level": "Senior",
+            "focus_skills": ["FastAPI", "React", "Docker"]
+        }
+        response = client.post("/api/v1/ai/interview-prep", json=payload)
+        assert response.status_code == 200
+        data = response.json()
+        assert data["target_role"] == "Lead Full Stack Developer"
+        assert data["experience_level"] == "Senior"
+        assert len(data["questions"]) > 0
+        assert "key_concepts" in data["questions"][0]
+
+def test_ai_interview_prep_validation():
+    with TestClient(app) as client:
+        payload = {
+            "target_role": "",
+            "experience_level": "Mid-Level"
+        }
+        response = client.post("/api/v1/ai/interview-prep", json=payload)
+        assert response.status_code == 400
