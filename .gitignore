@@ -218,4 +218,7 @@ __marimo__/
 *.db
 career_ai.db
 frontend.zip
+node_modules/
+frontend/node_modules/
+
 
