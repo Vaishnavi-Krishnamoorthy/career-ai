@@ -201,3 +201,54 @@ export async function createHackathon(hackathonData) {
   });
   return await res.json();
 }
+
+export async function generateInterviewPrep(targetRole, experienceLevel = 'Mid-Level', focusSkills = []) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/ai/interview-prep`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        target_role: targetRole,
+        experience_level: experienceLevel,
+        focus_skills: focusSkills
+      })
+    });
+    if (!res.ok) throw new Error('Interview prep request failed');
+    return await res.json();
+  } catch (err) {
+    console.warn('Backend unavailable, returning sample interview prep:', err);
+    return {
+      target_role: targetRole || 'Full Stack Developer',
+      experience_level: experienceLevel || 'Mid-Level',
+      prep_summary: `Custom interview preparation guide for ${experienceLevel} ${targetRole || 'Full Stack'} role.`,
+      questions: [
+        {
+          id: 1,
+          category: 'System Architecture',
+          question: `How would you design a high-availability REST API for ${targetRole || 'Full Stack'} applications with caching?`,
+          key_concepts: ['Async/Await', 'Redis Caching', 'Database Indexing', 'Load Balancing'],
+          sample_answer_tips: 'Explain stateless API design, background workers (Celery/FastAPI Tasks), and caching frequent endpoints.'
+        },
+        {
+          id: 2,
+          category: 'Technical Deep Dive',
+          question: 'What strategies do you use for performance optimization in modern web applications?',
+          key_concepts: ['Code Splitting', 'Lazy Loading', 'Connection Pooling', 'State Management'],
+          sample_answer_tips: 'Discuss network profiling, bundling optimization, database query optimization, and memory leak prevention.'
+        },
+        {
+          id: 3,
+          category: 'Behavioral & Problem Solving',
+          question: 'Describe a situation where you had to debug an urgent production incident.',
+          key_concepts: ['Root Cause Analysis', 'Structured Logging', 'Post-Mortem', 'Monitoring'],
+          sample_answer_tips: 'Use the STAR technique. Focus on systematic log analysis, rapid patch verification, and regression prevention.'
+        }
+      ],
+      key_takeaways: [
+        'Master asynchronous request processing and database indexing',
+        'Structure behavioral answers using the STAR method',
+        'Demonstrate understanding of fault tolerance and graceful fallbacks'
+      ]
+    };
+  }
+}

@@ -53,6 +53,13 @@ export default function Navbar({ activeTab, setActiveTab, apiStatus, onOpenPostM
           >
             ✨ AI Resume & Roadmap
           </button>
+          <button
+            onClick={() => setActiveTab('interview')}
+            className={activeTab === 'interview' ? 'btn-primary' : 'btn-secondary'}
+            style={{ padding: '8px 16px', fontSize: '0.9rem' }}
+          >
+            🎯 AI Interview Prep
+          </button>
         </nav>
 
         {/* Right Action & Health Indicator */}
