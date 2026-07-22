@@ -5,7 +5,7 @@ export async function fetchHealth() {
     const res = await fetch(`${API_BASE_URL}/health`);
     if (!res.ok) throw new Error('Health check failed');
     return await res.json();
-  } catch (err) {
+  } catch {
     return { status: 'offline', service: 'Career AI Backend' };
   }
 }
@@ -156,7 +156,7 @@ export async function generateRoadmap(currentSkills, targetRole) {
     });
     if (!res.ok) throw new Error('Roadmap generation failed');
     return await res.json();
-  } catch (err) {
+  } catch {
     return {
       target_role: targetRole || 'Full Stack AI Engineer',
       estimated_timeline: '8 - 12 Weeks',

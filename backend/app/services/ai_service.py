@@ -24,16 +24,11 @@ class AIService:
         if self.api_key:
             try:
                 from google import genai
+                from google.genai import types
                 client = genai.Client(api_key=self.api_key)
                 prompt = f"""
-                Analyze the following resume and return JSON with keys:
-                - extracted_name (string)
-                - skills_found (list of strings)
-                - experience_level (Entry/Intermediate/Senior/Lead)
-                - strengths (list of 3 strings)
-                - skill_gaps (list of 3 strings for role '{target_role or "Full Stack AI Developer"}')
-                - recommended_roles (list of 3 string job titles)
-                - summary (2 sentence professional summary)
+                Analyze the following resume to extract candidate details.
+                Calculate skill gaps specifically targeting the role '{target_role or "Full Stack AI Developer"}'.
 
                 Resume:
                 {resume_text}
@@ -41,8 +36,18 @@ class AIService:
                 response = client.models.generate_content(
                     model='gemini-2.5-flash',
                     contents=prompt,
+                    config=types.GenerateContentConfig(
+                        response_mime_type="application/json",
+                        response_schema=ResumeAnalysisResponse
+                    )
                 )
-                data = json.loads(response.text)
+                text = response.text.strip()
+                if text.startswith("```"):
+                    start = text.find("{")
+                    end = text.rfind("}")
+                    if start != -1 and end != -1:
+                        text = text[start:end+1]
+                data = json.loads(text)
                 return ResumeAnalysisResponse(**data)
             except Exception as e:
                 print(f"Gemini API fallback triggered due to: {e}")

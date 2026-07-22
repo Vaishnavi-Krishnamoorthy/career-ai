@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { analyzeResume, generateRoadmap } from '../services/api';
 
 export default function ResumeAnalyzer({ onApplySkillsToFilter }) {

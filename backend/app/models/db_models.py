@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import Column, String, Integer, Float, Boolean, Text, DateTime, JSON
 from app.database import Base
 
@@ -17,7 +17,7 @@ class Job(Base):
     skills = Column(JSON, nullable=False, default=list) # List of required skill strings
     application_url = Column(String(500), nullable=True)
     is_remote = Column(Boolean, default=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None))
 
 class Hackathon(Base):
     __tablename__ = "hackathons"
@@ -34,7 +34,7 @@ class Hackathon(Base):
     registration_url = Column(String(500), nullable=False)
     banner_url = Column(String(500), nullable=True)
     is_featured = Column(Boolean, default=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None))
 
 class UserProfile(Base):
     __tablename__ = "user_profiles"
@@ -45,4 +45,4 @@ class UserProfile(Base):
     experience_level = Column(String(50), default="Intermediate")
     skills = Column(JSON, default=list)
     bio = Column(Text, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None))

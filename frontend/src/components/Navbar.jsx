@@ -1,4 +1,3 @@
-import React from 'react';
 
 export default function Navbar({ activeTab, setActiveTab, apiStatus, onOpenPostModal }) {
   return (

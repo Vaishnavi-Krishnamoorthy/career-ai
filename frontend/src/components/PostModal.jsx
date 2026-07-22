@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { createJob, createHackathon } from '../services/api';
 
 export default function PostModal({ isOpen, onClose, onRefresh }) {

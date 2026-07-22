@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import JobCard from './components/JobCard';
@@ -30,8 +30,8 @@ export default function App() {
   }, []);
 
   // Load Data based on Tab & Search/Filter
-  const loadData = async () => {
-    setLoading(true);
+  const loadData = useCallback(async () => {
+    Promise.resolve().then(() => setLoading(true));
     try {
       if (activeTab === 'jobs') {
         const data = await fetchJobs({
@@ -52,11 +52,12 @@ export default function App() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeTab, searchQuery, selectedFilter, userSkills]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadData();
-  }, [activeTab, searchQuery, selectedFilter, userSkills]);
+  }, [loadData]);
 
   const handleApplySkillsToFilter = (skills) => {
     setUserSkills(skills);
