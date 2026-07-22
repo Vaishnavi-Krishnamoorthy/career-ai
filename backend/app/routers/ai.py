@@ -4,7 +4,9 @@ from app.models.schemas import (
     ResumeAnalysisRequest,
     ResumeAnalysisResponse,
     CareerRoadmapRequest,
-    CareerRoadmapResponse
+    CareerRoadmapResponse,
+    InterviewPrepRequest,
+    InterviewPrepResponse
 )
 from app.services.ai_service import ai_service
 
@@ -21,4 +23,14 @@ def generate_roadmap(request: CareerRoadmapRequest):
     return ai_service.generate_career_roadmap(
         current_skills=request.current_skills,
         target_role=request.target_role
+    )
+
+@router.post("/interview-prep", response_model=InterviewPrepResponse)
+def generate_interview_prep(request: InterviewPrepRequest):
+    if not request.target_role or len(request.target_role.strip()) == 0:
+        raise HTTPException(status_code=400, detail="Target role must not be empty")
+    return ai_service.generate_interview_prep(
+        target_role=request.target_role,
+        experience_level=request.experience_level or "Mid-Level",
+        focus_skills=request.focus_skills
     )
