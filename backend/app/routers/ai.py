@@ -8,10 +8,12 @@ from app.models.schemas import (
     ParsedProfile,
     OCRResponse,
     InterviewPrepRequest,
-    InterviewPrepResponse
+    InterviewPrepResponse,
+    EmailNotificationRequest
 )
 from app.services.ai_service import ai_service
 from app.services.job_service import job_service
+from app.services.email_service import email_service
 
 router = APIRouter(prefix="/ai", tags=["AI & Resume Guidance"])
 
@@ -78,3 +80,19 @@ def generate_interview_prep(request: InterviewPrepRequest):
         experience_level=request.experience_level or "Mid-Level",
         focus_skills=request.focus_skills
     )
+
+@router.post("/send-email-alert")
+def send_email_alert(request: EmailNotificationRequest):
+    """
+    Sends Gmail email alert listing candidate's top skill-matched remote jobs.
+    """
+    if not request.recipient_email or "@" not in request.recipient_email:
+        raise HTTPException(status_code=400, detail="Valid recipient email address is required")
+    
+    jobs_dict = [j.model_dump() for j in request.matched_jobs]
+    return email_service.send_job_match_email(
+        recipient_email=request.recipient_email,
+        candidate_name=request.candidate_name or "Candidate",
+        matched_jobs=jobs_dict
+    )
+

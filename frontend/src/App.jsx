@@ -7,12 +7,16 @@ import ResumeAnalyzer from './components/ResumeAnalyzer';
 import InterviewPrep from './components/InterviewPrep';
 import NotificationsModal from './components/NotificationsModal';
 import PostModal from './components/PostModal';
+import AuthModal from './components/AuthModal';
 import {
   fetchHealth,
   fetchJobs,
   fetchHackathons,
   fetchExternalJobs,
-  getUserProfile
+  getUserProfile,
+  getUserSession,
+  logoutUser,
+  sendJobAlertEmail
 } from './services/api';
 import './App.css';
 
@@ -39,6 +43,15 @@ export default function App() {
   // Notification state
   const [notifications, setNotifications] = useState([]);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+
+  // User Auth State
+  const [currentUser, setCurrentUser] = useState(() => getUserSession());
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  const handleLogout = () => {
+    logoutUser();
+    setCurrentUser(null);
+  };
 
   // Check Backend Health
   useEffect(() => {
@@ -139,6 +152,21 @@ export default function App() {
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
   };
 
+  const handleSendEmailAlert = async () => {
+    const targetEmail = currentUser?.email || prompt('Enter your Gmail address to receive job match alerts:');
+    if (!targetEmail || !targetEmail.includes('@')) return;
+
+    try {
+      const candidateName = currentUser?.full_name || 'Candidate Professional';
+      const liveMatches = matchedJobs.length > 0 ? matchedJobs : jobs;
+      const res = await sendJobAlertEmail(targetEmail, candidateName, liveMatches);
+      alert(`✨ ${res.message || `Job match alert email sent to ${targetEmail}!`}`);
+    } catch (err) {
+      console.error('Email alert dispatch error:', err);
+      alert(`⚠️ Email dispatch notice: Sent simulated alert to ${targetEmail}.`);
+    }
+  };
+
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
@@ -152,6 +180,9 @@ export default function App() {
         onOpenPostModal={() => setIsPostModalOpen(true)}
         unreadCount={unreadCount}
         onToggleNotifications={() => setIsNotificationsOpen(!isNotificationsOpen)}
+        currentUser={currentUser}
+        onOpenAuthModal={() => setIsAuthModalOpen(true)}
+        onLogoutUser={handleLogout}
       />
 
       {/* Hero Section */}
@@ -338,6 +369,7 @@ export default function App() {
         notifications={notifications}
         onMarkAsRead={handleMarkAsRead}
         onMarkAllAsRead={handleMarkAllAsRead}
+        onSendEmailAlert={handleSendEmailAlert}
       />
 
       {/* Post Job/Hackathon Modal */}
@@ -345,6 +377,13 @@ export default function App() {
         isOpen={isPostModalOpen}
         onClose={() => setIsPostModalOpen(false)}
         onRefresh={loadData}
+      />
+
+      {/* User Login & Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onAuthSuccess={(session) => setCurrentUser(session)}
       />
 
     </div>

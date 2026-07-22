@@ -142,3 +142,44 @@ def test_ai_interview_prep_validation():
         }
         response = client.post("/api/v1/ai/interview-prep", json=payload)
         assert response.status_code == 400
+
+def test_auth_login_and_register():
+    with TestClient(app) as client:
+        payload = {
+            "full_name": "Test User",
+            "email": "test.user@example.com",
+            "password": "securepassword123",
+            "enable_gmail_alerts": True
+        }
+        reg_res = client.post("/api/v1/auth/register", json=payload)
+        assert reg_res.status_code == 200
+        data = reg_res.json()
+        assert data["email"] == "test.user@example.com"
+        assert "token" in data
+
+        login_res = client.post("/api/v1/auth/login", json={"email": "test.user@example.com", "password": "securepassword123"})
+        assert login_res.status_code == 200
+        assert "token" in login_res.json()
+
+def test_send_email_alert():
+    with TestClient(app) as client:
+        payload = {
+            "recipient_email": "candidate@example.com",
+            "candidate_name": "Alex Candidate",
+            "matched_jobs": [
+                {
+                    "id": "remotive-1",
+                    "title": "Senior AI Developer",
+                    "company": "Cognitive Tech",
+                    "match_score": 94,
+                    "salary_range": "$140,000",
+                    "application_url": "https://example.com"
+                }
+            ]
+        }
+        response = client.post("/api/v1/ai/send-email-alert", json=payload)
+        assert response.status_code == 200
+        data = response.json()
+        assert data["status"] == "success"
+        assert data["recipient"] == "candidate@example.com"
+

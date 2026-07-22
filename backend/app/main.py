@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database import engine, Base, SessionLocal
 from app.seed import seed_database
-from app.routers import health, jobs, hackathons, ai
+from app.routers import health, jobs, hackathons, ai, auth
 
 # Initialize DB tables
 Base.metadata.create_all(bind=engine)
@@ -46,6 +46,7 @@ app.include_router(health.router, prefix=settings.API_V1_STR)
 app.include_router(jobs.router, prefix=settings.API_V1_STR)
 app.include_router(hackathons.router, prefix=settings.API_V1_STR)
 app.include_router(ai.router, prefix=settings.API_V1_STR)
+app.include_router(auth.router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def root():

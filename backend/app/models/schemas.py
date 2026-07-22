@@ -147,3 +147,34 @@ class JobNotification(BaseModel):
 class ProfileSaveRequest(BaseModel):
     profile: ParsedProfile
 
+class UserLoginRequest(BaseModel):
+    email: str
+    password: str
+
+class UserRegisterRequest(BaseModel):
+    full_name: str
+    email: str
+    password: str
+    enable_gmail_alerts: bool = True
+
+class AuthResponse(BaseModel):
+    token: str
+    full_name: str
+    email: str
+    enable_gmail_alerts: bool = True
+    message: str
+
+class MatchedJobItem(BaseModel):
+    id: str
+    title: str
+    company: str
+    match_score: int
+    salary_range: Optional[str] = None
+    application_url: Optional[str] = None
+
+class EmailNotificationRequest(BaseModel):
+    recipient_email: str
+    candidate_name: str
+    matched_jobs: List[MatchedJobItem]
+
+

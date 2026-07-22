@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export default function NotificationsModal({ isOpen, onClose, notifications, onMarkAsRead, onMarkAllAsRead }) {
+export default function NotificationsModal({ isOpen, onClose, notifications, onMarkAsRead, onMarkAllAsRead, onSendEmailAlert }) {
   const [pushPermission, setPushPermission] = useState('default');
 
   useEffect(() => {
@@ -69,11 +69,18 @@ export default function NotificationsModal({ isOpen, onClose, notifications, onM
           <span className="text-xs text-secondary font-medium">
             {notifications.filter(n => !n.read).length} Unread Alerts
           </span>
-          {notifications.length > 0 && (
-            <button onClick={onMarkAllAsRead} className="btn-link text-xs">
-              Mark All as Read
-            </button>
-          )}
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            {onSendEmailAlert && (
+              <button onClick={onSendEmailAlert} className="btn-secondary text-xs" style={{ padding: '4px 10px', fontSize: '0.75rem' }}>
+                ✉️ Email to Gmail
+              </button>
+            )}
+            {notifications.length > 0 && (
+              <button onClick={onMarkAllAsRead} className="btn-link text-xs">
+                Mark All as Read
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Notification List */}

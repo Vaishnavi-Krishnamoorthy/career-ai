@@ -4,7 +4,10 @@ export default function Navbar({
   apiStatus,
   onOpenPostModal,
   unreadCount = 0,
-  onToggleNotifications
+  onToggleNotifications,
+  currentUser,
+  onOpenAuthModal,
+  onLogoutUser
 }) {
   return (
     <header className="glass-panel" style={{ margin: '16px auto', maxWidth: '1280px', padding: '14px 24px' }}>
@@ -75,7 +78,7 @@ export default function Navbar({
           </button>
         </nav>
 
-        {/* Right Action & Health Indicator */}
+        {/* Right Action, User Auth & Health Indicator */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           {/* Notification Bell Icon */}
           <button
@@ -110,6 +113,31 @@ export default function Navbar({
               </span>
             )}
           </button>
+
+          {/* User Auth Profile Button */}
+          {currentUser ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span className="badge badge-indigo" style={{ fontSize: '0.8rem', padding: '6px 12px' }}>
+                👤 {currentUser.full_name || currentUser.email}
+              </span>
+              <button
+                onClick={onLogoutUser}
+                className="btn-secondary"
+                style={{ fontSize: '0.75rem', padding: '6px 10px', color: 'var(--text-muted)' }}
+                title="Sign Out"
+              >
+                Exit 🚪
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={onOpenAuthModal}
+              className="btn-secondary"
+              style={{ fontSize: '0.85rem', padding: '8px 14px' }}
+            >
+              👤 Sign In
+            </button>
+          )}
 
           <div style={{
             display: 'flex',
