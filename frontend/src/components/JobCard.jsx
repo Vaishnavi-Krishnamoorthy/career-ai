@@ -94,9 +94,25 @@ export default function JobCard({ job, onSelect }) {
               className="btn-primary"
               onClick={(e) => {
                 e.stopPropagation();
-                const url = (job.application_url && job.application_url.startsWith('http'))
-                  ? job.application_url
-                  : `https://www.google.com/search?q=${encodeURIComponent('apply ' + job.title + ' ' + job.company)}`;
+                let url = (job.application_url || '').trim();
+                const isInvalid = !url || !url.startsWith('http') || [
+                  'cognitivecloud', 'verve.tech', 'nexus-systems', 'mindlabs', 'techcraft', 'tndigital', 'apexai', 'vervesg'
+                ].some(d => url.includes(d));
+
+                if (isInvalid) {
+                  const comp = (job.company || '').toLowerCase();
+                  if (comp.includes('google')) url = 'https://careers.google.com';
+                  else if (comp.includes('meta')) url = 'https://www.metacareers.com';
+                  else if (comp.includes('amazon')) url = 'https://amazon.jobs';
+                  else if (comp.includes('openai')) url = 'https://openai.com/careers';
+                  else if (comp.includes('microsoft')) url = 'https://careers.microsoft.com';
+                  else if (comp.includes('zoho')) url = 'https://www.zoho.com/careers/';
+                  else if (comp.includes('freshworks')) url = 'https://www.freshworks.com/company/careers/';
+                  else if (comp.includes('stripe')) url = 'https://stripe.com/jobs';
+                  else if (comp.includes('razorpay')) url = 'https://razorpay.com/jobs/';
+                  else url = `https://www.google.com/search?q=${encodeURIComponent('apply ' + (job.title || '') + ' ' + (job.company || ''))}`;
+                }
+
                 window.open(url, '_blank', 'noopener,noreferrer');
               }}
               style={{ padding: '6px 14px', fontSize: '0.85rem' }}

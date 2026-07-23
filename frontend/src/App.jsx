@@ -380,10 +380,27 @@ export default function App() {
             </div>
 
             <a
-              href={(selectedJob.application_url && selectedJob.application_url.startsWith('http'))
-                ? selectedJob.application_url
-                : `https://www.google.com/search?q=${encodeURIComponent('apply ' + selectedJob.title + ' ' + selectedJob.company)}`
-              }
+              href={(() => {
+                let url = (selectedJob.application_url || '').trim();
+                const isInvalid = !url || !url.startsWith('http') || [
+                  'cognitivecloud', 'verve.tech', 'nexus-systems', 'mindlabs', 'techcraft', 'tndigital', 'apexai', 'vervesg'
+                ].some(d => url.includes(d));
+
+                if (isInvalid) {
+                  const comp = (selectedJob.company || '').toLowerCase();
+                  if (comp.includes('google')) return 'https://careers.google.com';
+                  if (comp.includes('meta')) return 'https://www.metacareers.com';
+                  if (comp.includes('amazon')) return 'https://amazon.jobs';
+                  if (comp.includes('openai')) return 'https://openai.com/careers';
+                  if (comp.includes('microsoft')) return 'https://careers.microsoft.com';
+                  if (comp.includes('zoho')) return 'https://www.zoho.com/careers/';
+                  if (comp.includes('freshworks')) return 'https://www.freshworks.com/company/careers/';
+                  if (comp.includes('stripe')) return 'https://stripe.com/jobs';
+                  if (comp.includes('razorpay')) return 'https://razorpay.com/jobs/';
+                  return `https://www.google.com/search?q=${encodeURIComponent('apply ' + (selectedJob.title || '') + ' ' + (selectedJob.company || ''))}`;
+                }
+                return url;
+              })()}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary"

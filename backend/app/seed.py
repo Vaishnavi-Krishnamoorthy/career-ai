@@ -155,25 +155,14 @@ SEED_HACKATHONS = [
 ]
 
 def seed_database(db: Session):
-    # Wipe old dummy jobs if present to ensure clean real enterprise company data
-    db.query(Job).filter(
-        (Job.company == "Cognitive Cloud AI") | 
-        (Job.company == "Verve Technologies") | 
-        (Job.company == "Nexus Systems") |
-        (Job.company == "TechCraft India")
-    ).delete(synchronize_session=False)
+    # Always wipe existing jobs on startup to ensure 100% clean, real enterprise company data
+    db.query(Job).delete(synchronize_session=False)
     db.commit()
 
-    # Ensure all SEED_JOBS are present and updated in SQLite DB
+    # Re-populate clean SEED_JOBS with verified company URLs
     for job_data in SEED_JOBS:
-        existing = db.query(Job).filter(Job.title == job_data["title"], Job.company == job_data["company"]).first()
-        if not existing:
-            job = Job(**job_data)
-            db.add(job)
-        else:
-            existing.application_url = job_data["application_url"]
-            existing.company = job_data["company"]
-            existing.location = job_data["location"]
+        job = Job(**job_data)
+        db.add(job)
     db.commit()
 
     # Ensure all SEED_HACKATHONS are present in SQLite DB
