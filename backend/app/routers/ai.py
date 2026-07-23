@@ -59,13 +59,14 @@ def parse_resume_text(request: ResumeAnalysisRequest):
 def get_external_jobs(
     search: Optional[str] = None,
     location: Optional[str] = Query(None, description="Target city, country, or region (e.g. India, Bangalore, Singapore, Europe)"),
+    category: Optional[str] = Query(None, description="Job category (e.g. Tech, Marketing, Design, Sales, Finance, HR, Support)"),
     user_skills: Optional[str] = Query(None, description="Comma-separated list of candidate skills")
 ):
     """
-    Retrieves live remote and regional job listings matched against candidate skills and target location.
+    Retrieves live remote and regional job listings across all categories (Marketing, Sales, Design, Finance, HR, Support, Tech).
     """
     skills_list = [s.strip() for s in user_skills.split(",")] if user_skills else []
-    return job_service.fetch_external_jobs(search=search, location=location, candidate_skills=skills_list)
+    return job_service.fetch_external_jobs(search=search, location=location, category=category, candidate_skills=skills_list)
 
 @router.post("/career-roadmap", response_model=CareerRoadmapResponse)
 def generate_roadmap(request: CareerRoadmapRequest):

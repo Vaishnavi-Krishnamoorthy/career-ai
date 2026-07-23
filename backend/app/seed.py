@@ -109,6 +109,102 @@ SEED_JOBS = [
         "skills": ["Python", "FastAPI", "React", "PostgreSQL", "Redis"],
         "application_url": "https://razorpay.com/jobs/",
         "is_remote": False
+    },
+    {
+        "title": "Digital Growth & Performance Marketing Specialist",
+        "company": "HubSpot",
+        "location": "Remote / Cambridge, MA",
+        "job_type": "Full-time",
+        "experience_level": "Mid-Level",
+        "salary_range": "$95,000 - $130,000",
+        "description": "Lead multi-channel digital acquisition, SEO campaigns, conversion rate optimization, and brand marketing strategies.",
+        "skills": ["Digital Marketing", "SEO", "Google Analytics", "Content Strategy", "Copywriting"],
+        "application_url": "https://www.hubspot.com/careers",
+        "is_remote": True
+    },
+    {
+        "title": "Lead UI/UX Product Designer",
+        "company": "Figma",
+        "location": "San Francisco, CA / Remote",
+        "job_type": "Full-time",
+        "experience_level": "Senior",
+        "salary_range": "$140,000 - $180,000",
+        "description": "Design sleek user interfaces, design systems, interactive prototypes, and modern user experience flows for global web products.",
+        "skills": ["UI/UX Design", "Figma", "Design Systems", "Prototyping", "User Research"],
+        "application_url": "https://www.figma.com/careers/",
+        "is_remote": True
+    },
+    {
+        "title": "Financial Analyst & Corporate Accountant",
+        "company": "Deloitte",
+        "location": "Mumbai, Maharashtra, India / Hybrid",
+        "job_type": "Full-time",
+        "experience_level": "Mid-Level",
+        "salary_range": "₹16,00,000 - ₹24,00,000 INR",
+        "description": "Conduct financial forecasting, corporate valuation, budget modeling, and strategic advisory for international enterprise clients.",
+        "skills": ["Finance", "Financial Analysis", "Accounting", "Excel", "Corporate Valuation"],
+        "application_url": "https://www2.deloitte.com/global/en/careers.html",
+        "is_remote": False
+    },
+    {
+        "title": "Human Resources & Talent Acquisition Lead",
+        "company": "Workday",
+        "location": "Chicago, IL / Hybrid",
+        "job_type": "Full-time",
+        "experience_level": "Senior",
+        "salary_range": "$110,000 - $145,000",
+        "description": "Drive global talent acquisition, employee experience programs, diversity initiatives, and executive recruitment.",
+        "skills": ["Human Resources", "Talent Acquisition", "Recruiting", "People Operations", "Workday"],
+        "application_url": "https://www.workday.com/en-us/company/careers.html",
+        "is_remote": False
+    },
+    {
+        "title": "Enterprise Sales & Account Executive",
+        "company": "Salesforce",
+        "location": "London, UK / Hybrid",
+        "job_type": "Full-time",
+        "experience_level": "Senior",
+        "salary_range": "£80,000 - £120,000 GBP",
+        "description": "Manage enterprise SaaS client relationships, direct sales pipelines, contract negotiations, and strategic revenue expansion.",
+        "skills": ["Sales", "Account Management", "B2B SaaS", "CRM", "Business Development"],
+        "application_url": "https://www.salesforce.com/company/careers/",
+        "is_remote": False
+    },
+    {
+        "title": "Customer Success & Support Specialist",
+        "company": "Zendesk",
+        "location": "Global Remote",
+        "job_type": "Full-time",
+        "experience_level": "Entry",
+        "salary_range": "$65,000 - $85,000",
+        "description": "Deliver high-touch technical and operational support, onboard new enterprise clients, and resolve customer inquiries.",
+        "skills": ["Customer Support", "Customer Success", "Communication", "Troubleshooting", "Zendesk"],
+        "application_url": "https://www.zendesk.com/careers/",
+        "is_remote": True
+    },
+    {
+        "title": "Senior Content Strategist & Technical Writer",
+        "company": "Notion",
+        "location": "New York, NY / Remote",
+        "job_type": "Full-time",
+        "experience_level": "Senior",
+        "salary_range": "$115,000 - $150,000",
+        "description": "Craft compelling brand narratives, product documentation, developer guides, and high-impact marketing copy.",
+        "skills": ["Content Writing", "Copywriting", "Technical Writing", "Content Strategy", "Editing"],
+        "application_url": "https://www.notion.so/careers",
+        "is_remote": True
+    },
+    {
+        "title": "Operations & Logistics Manager",
+        "company": "Airbnb",
+        "location": "Austin, TX / Hybrid",
+        "job_type": "Full-time",
+        "experience_level": "Mid-Level",
+        "salary_range": "$105,000 - $135,000",
+        "description": "Optimize global supply chain logistics, operational workflows, partner vendor management, and process efficiency.",
+        "skills": ["Operations", "Supply Chain", "Logistics", "Process Optimization", "Project Management"],
+        "application_url": "https://careers.airbnb.com/",
+        "is_remote": False
     }
 ]
 

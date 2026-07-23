@@ -25,6 +25,7 @@ export default function App() {
   const [apiStatus, setApiStatus] = useState('checking');
   const [searchQuery, setSearchQuery] = useState('');
   const [locationQuery, setLocationQuery] = useState('');
+  const [categoryQuery, setCategoryQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('All');
   
   const [jobs, setJobs] = useState([]);
@@ -61,7 +62,7 @@ export default function App() {
     });
   }, []);
 
-  // Load Data based on Tab & Search/Filter/Location
+  // Load Data based on Tab & Search/Filter/Location/Category
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
@@ -71,11 +72,13 @@ export default function App() {
             search: searchQuery,
             job_type: selectedFilter,
             location: locationQuery,
+            category: categoryQuery,
             user_skills: userSkills.join(',')
           }).catch(() => []),
           fetchExternalJobs({
             search: searchQuery,
             location: locationQuery,
+            category: categoryQuery,
             user_skills: userSkills.join(',')
           }).catch(() => [])
         ]);
@@ -92,14 +95,23 @@ export default function App() {
           }
         });
 
-        // Filter by location query if provided
+        // Filter by location & category query if provided
         let finalJobs = combined;
         if (locationQuery && locationQuery.trim().toLowerCase() !== 'all') {
           const locL = locationQuery.trim().toLowerCase();
-          finalJobs = combined.filter(j => (
+          finalJobs = finalJobs.filter(j => (
             (j.location || '').toLowerCase().includes(locL) ||
             (j.title || '').toLowerCase().includes(locL) ||
             (j.company || '').toLowerCase().includes(locL)
+          ));
+        }
+
+        if (categoryQuery && categoryQuery.trim().toLowerCase() !== 'all') {
+          const catL = categoryQuery.trim().toLowerCase();
+          finalJobs = finalJobs.filter(j => (
+            (j.title || '').toLowerCase().includes(catL) ||
+            (j.description || '').toLowerCase().includes(catL) ||
+            (j.skills || []).some(s => s.toLowerCase().includes(catL))
           ));
         }
 
@@ -117,7 +129,7 @@ export default function App() {
     } finally {
       setLoading(false);
     }
-  }, [activeTab, searchQuery, locationQuery, selectedFilter, userSkills]);
+  }, [activeTab, searchQuery, locationQuery, categoryQuery, selectedFilter, userSkills]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -220,6 +232,8 @@ export default function App() {
         setSearchQuery={setSearchQuery}
         locationQuery={locationQuery}
         setLocationQuery={setLocationQuery}
+        categoryQuery={categoryQuery}
+        setCategoryQuery={setCategoryQuery}
         selectedFilter={selectedFilter}
         setSelectedFilter={setSelectedFilter}
       />

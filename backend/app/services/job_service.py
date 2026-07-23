@@ -49,18 +49,39 @@ class JobService:
         self,
         search: Optional[str] = None,
         location: Optional[str] = None,
+        category: Optional[str] = None,
         candidate_skills: Optional[List[str]] = None,
-        limit: int = 25
+        limit: int = 30
     ) -> List[Dict[str, Any]]:
         """
-        Fetches remote and regional jobs from Remotive API and regional databases,
-        filters by location & candidate skills, and computes match score percentages.
+        Fetches remote and regional jobs across all categories (Marketing, Sales, Design, Finance, HR, Tech)
+        from Remotive API and regional databases, filters by category, location & candidate skills.
         """
         results = []
         try:
             params = {}
             if search:
                 params["search"] = search
+            if category and category.lower() != "all":
+                # Map broad UI category to Remotive category API key
+                cat_map = {
+                    "tech": "software-dev",
+                    "software": "software-dev",
+                    "design": "design",
+                    "marketing": "marketing",
+                    "sales": "sales",
+                    "finance": "finance",
+                    "business": "business",
+                    "hr": "human-resources",
+                    "support": "customer-support",
+                    "writing": "writing"
+                }
+                c_key = category.lower()
+                for k, v in cat_map.items():
+                    if k in c_key:
+                        params["category"] = v
+                        break
+
             response = httpx.get(REMOTIVE_API_URL, params=params, timeout=5.0)
             if response.status_code == 200:
                 data = response.json()
