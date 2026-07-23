@@ -181,6 +181,16 @@ class AIService:
         else:
             intern_exp = "Backend Developer Intern - Built scalable FastAPI microservices and Docker containers."
 
+        found_frameworks = [f for f in ["React", "Next.js", "FastAPI", "Node.js", "TailwindCSS", "Redux", "PyTorch", "TensorFlow", "Django", "Spring Boot"] if re.search(r'\b' + re.escape(f) + r'\b', resume_text, re.I)]
+        found_databases = [d for d in ["PostgreSQL", "MongoDB", "MySQL", "Redis", "SQLite", "SQL", "DynamoDB"] if re.search(r'\b' + re.escape(d) + r'\b', resume_text, re.I)]
+        found_tools = [t for t in ["Docker", "Kubernetes", "Git", "GitHub", "AWS", "CI/CD", "Linux", "Figma", "Postman"] if re.search(r'\b' + re.escape(t) + r'\b', resume_text, re.I)]
+        found_soft = [s for s in ["Problem Solving", "Communication", "Team Leadership", "Agile", "Collaboration"] if re.search(r'\b' + re.escape(s) + r'\b', resume_text, re.I)]
+
+        if not found_frameworks: found_frameworks = ["React", "FastAPI", "Next.js"]
+        if not found_databases: found_databases = ["PostgreSQL", "Redis"]
+        if not found_tools: found_tools = ["Docker", "Git", "AWS"]
+        if not found_soft: found_soft = ["Problem Solving", "Communication", "Agile/Scrum"]
+
         return ParsedProfile(
             full_name=full_name,
             email=email_match.group(0) if email_match else "alex.morgan@example.com",
@@ -192,6 +202,10 @@ class AIService:
             cgpa=cgpa_match.group(1) if cgpa_match else "3.85 / 4.0",
             skills=found_skills,
             programming_languages=found_langs or ["Python", "JavaScript", "TypeScript", "SQL"],
+            frameworks=found_frameworks,
+            databases=found_databases,
+            tools=found_tools,
+            soft_skills=found_soft,
             projects=projects,
             certifications=certs,
             internship_experience=intern_exp,

@@ -8,6 +8,7 @@ import InterviewPrep from './components/InterviewPrep';
 import NotificationsModal from './components/NotificationsModal';
 import PostModal from './components/PostModal';
 import AuthModal from './components/AuthModal';
+import SkeletonJobCard from './components/SkeletonJobCard';
 import {
   fetchHealth,
   fetchJobs,
@@ -263,8 +264,8 @@ export default function App() {
         {activeTab === 'jobs' && (
           <div>
             {loading ? (
-              <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-secondary)' }}>
-                ⚡ Loading Jobs from Backend...
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '24px' }}>
+                {[1, 2, 3, 4, 5, 6].map(n => <SkeletonJobCard key={n} />)}
               </div>
             ) : jobs.length === 0 ? (
               <div className="glass-panel" style={{ textAlign: 'center', padding: '60px' }}>
@@ -285,8 +286,8 @@ export default function App() {
         {activeTab === 'matches' && (
           <div>
             {loading ? (
-              <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-secondary)' }}>
-                🎯 Fetching & Calculating Skill Matched Remote Jobs...
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '24px' }}>
+                {[1, 2, 3, 4, 5, 6].map(n => <SkeletonJobCard key={n} />)}
               </div>
             ) : matchedJobs.length === 0 ? (
               <div className="glass-panel" style={{ textAlign: 'center', padding: '60px' }}>

@@ -121,6 +121,10 @@ class ParsedProfile(BaseModel):
     cgpa: Optional[str] = None
     skills: List[str] = []
     programming_languages: List[str] = []
+    frameworks: List[str] = []
+    databases: List[str] = []
+    tools: List[str] = []
+    soft_skills: List[str] = []
     projects: List[str] = []
     certifications: List[str] = []
     internship_experience: Optional[str] = None
