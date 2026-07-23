@@ -79,17 +79,19 @@ export default function LiveInterviewSimulator({ targetRole, experienceLevel, qu
     }
   }, [currentIdx, currentQ]);
 
+  const listeningRef = useRef(false);
+
   // Speech-to-Text Recognition setup
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      alert('Speech Recognition is not supported in this browser version. You can type your answer below.');
+      alert('Speech Recognition is not supported in this browser. You can type or edit your answer in the text box below.');
       return;
     }
 
     try {
       if (recognitionRef.current) {
-        recognitionRef.current.stop();
+        try { recognitionRef.current.stop(); } catch (err) { console.warn('stop error', err); }
       }
 
       const recognition = new SpeechRecognition();
@@ -97,31 +99,62 @@ export default function LiveInterviewSimulator({ targetRole, experienceLevel, qu
       recognition.interimResults = true;
       recognition.lang = 'en-US';
 
+      listeningRef.current = true;
+      setIsListening(true);
+
       recognition.onresult = (event) => {
-        let transcript = '';
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          transcript += event.results[i][0].transcript;
+        let fullTranscript = '';
+        for (let i = 0; i < event.results.length; i++) {
+          fullTranscript += event.results[i][0].transcript;
         }
-        setCurrentSpokenText(prev => {
-          const combined = (prev ? prev + ' ' : '') + transcript;
-          return combined;
-        });
+        if (fullTranscript.trim()) {
+          setCurrentSpokenText(fullTranscript.trim());
+        }
       };
 
-      recognition.onstart = () => setIsListening(true);
-      recognition.onend = () => setIsListening(false);
-      recognition.onerror = () => setIsListening(false);
+      recognition.onstart = () => {
+        setIsListening(true);
+      };
+
+      recognition.onend = () => {
+        if (listeningRef.current) {
+          try {
+            recognition.start();
+          } catch (err) {
+            console.warn('restart error', err);
+            setIsListening(false);
+            listeningRef.current = false;
+          }
+        } else {
+          setIsListening(false);
+        }
+      };
+
+      recognition.onerror = (e) => {
+        console.warn('Speech recognition notice:', e.error);
+        if (e.error !== 'no-speech') {
+          setIsListening(false);
+          listeningRef.current = false;
+        }
+      };
 
       recognition.start();
       recognitionRef.current = recognition;
     } catch (err) {
       console.error('Speech recognition error:', err);
+      setIsListening(false);
+      listeningRef.current = false;
     }
   };
 
   const stopListening = () => {
+    listeningRef.current = false;
     if (recognitionRef.current) {
-      recognitionRef.current.stop();
+      try {
+        recognitionRef.current.stop();
+      } catch (err) {
+        console.warn('stop error', err);
+      }
       setIsListening(false);
     }
   };
@@ -345,17 +378,37 @@ export default function LiveInterviewSimulator({ targetRole, experienceLevel, qu
 
               {/* Spoken Answer Transcription Box */}
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                  <label style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-secondary)' }}>
-                    Your Spoken Response (Speech-to-Text Transcribed):
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+                  <label style={{ fontSize: '0.88rem', fontWeight: '700', color: 'var(--text-secondary)' }}>
+                    🗣️ Your Spoken Response (Live Speech-to-Text):
                   </label>
                   {!isListening ? (
-                    <button onClick={startListening} className="btn-secondary" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
-                      🎙️ Start Speaking
+                    <button
+                      onClick={startListening}
+                      className="btn-primary"
+                      style={{
+                        fontSize: '0.82rem',
+                        padding: '6px 14px',
+                        background: 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)',
+                        boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
+                        borderRadius: '8px'
+                      }}
+                    >
+                      🎙️ Start Voice Input (STT)
                     </button>
                   ) : (
-                    <button onClick={stopListening} className="btn-primary" style={{ fontSize: '0.75rem', padding: '4px 10px', background: '#ef4444' }}>
-                      ⏹ Stop Listening
+                    <button
+                      onClick={stopListening}
+                      className="btn-primary"
+                      style={{
+                        fontSize: '0.82rem',
+                        padding: '6px 14px',
+                        background: '#ef4444',
+                        boxShadow: '0 4px 12px rgba(239, 68, 68, 0.4)',
+                        borderRadius: '8px'
+                      }}
+                    >
+                      ⏹ Stop Recording & Listening
                     </button>
                   )}
                 </div>
