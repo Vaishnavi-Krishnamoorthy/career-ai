@@ -110,7 +110,7 @@ export default function JobCard({ job, onSelect }) {
                   else if (comp.includes('freshworks')) url = 'https://www.freshworks.com/company/careers/';
                   else if (comp.includes('stripe')) url = 'https://stripe.com/jobs';
                   else if (comp.includes('razorpay')) url = 'https://razorpay.com/jobs/';
-                  else url = `https://www.google.com/search?q=${encodeURIComponent('apply ' + (job.title || '') + ' ' + (job.company || ''))}`;
+                  else url = 'https://remotive.com/remote-jobs';
                 }
 
                 window.open(url, '_blank', 'noopener,noreferrer');

@@ -397,7 +397,7 @@ export default function App() {
                   if (comp.includes('freshworks')) return 'https://www.freshworks.com/company/careers/';
                   if (comp.includes('stripe')) return 'https://stripe.com/jobs';
                   if (comp.includes('razorpay')) return 'https://razorpay.com/jobs/';
-                  return `https://www.google.com/search?q=${encodeURIComponent('apply ' + (selectedJob.title || '') + ' ' + (selectedJob.company || ''))}`;
+                  return 'https://remotive.com/remote-jobs';
                 }
                 return url;
               })()}
