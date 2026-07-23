@@ -9,6 +9,7 @@ import NotificationsModal from './components/NotificationsModal';
 import PostModal from './components/PostModal';
 import AuthModal from './components/AuthModal';
 import SkeletonJobCard from './components/SkeletonJobCard';
+import JobDetailsModal from './components/JobDetailsModal';
 import {
   fetchHealth,
   fetchJobs,
@@ -336,96 +337,14 @@ export default function App() {
           <InterviewPrep />
         )}
 
-      </main>
-
-      {/* Job Details Drawer Modal */}
+      {/* Internal Job Details Modal */}
       {selectedJob && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(0, 0, 0, 0.75)',
-          backdropFilter: 'blur(8px)',
-          display: 'flex',
-          justifyContent: 'flex-end',
-          zIndex: 999
-        }}>
-          <div className="glass-panel" style={{
-            width: '100%',
-            maxWidth: '540px',
-            height: '100%',
-            borderRadius: 0,
-            padding: '32px',
-            overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between'
-          }}>
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                <span className="badge badge-emerald">🎯 {selectedJob.match_score || 85}% Match</span>
-                <button
-                  onClick={() => setSelectedJob(null)}
-                  style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', fontSize: '1.5rem', cursor: 'pointer' }}
-                >
-                  ✕
-                </button>
-              </div>
-
-              <h2 style={{ fontSize: '1.6rem', fontWeight: '800', marginBottom: '6px' }}>{selectedJob.title}</h2>
-              <div style={{ color: 'var(--text-secondary)', marginBottom: '16px', fontSize: '0.95rem' }}>
-                🏢 {selectedJob.company} • 📍 {selectedJob.location} ({selectedJob.job_type})
-              </div>
-
-              <div style={{ background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '10px', marginBottom: '20px' }}>
-                <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Salary Package:</div>
-                <div style={{ fontSize: '1.2rem', fontWeight: '700', color: '#a5b4fc' }}>{selectedJob.salary_range}</div>
-              </div>
-
-              <h4 style={{ fontSize: '1rem', fontWeight: '700', marginBottom: '8px' }}>Job Overview</h4>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.7', marginBottom: '24px' }}>
-                {selectedJob.description}
-              </p>
-
-              <h4 style={{ fontSize: '1rem', fontWeight: '700', marginBottom: '10px' }}>Required Tech Stack</h4>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '32px' }}>
-                {(selectedJob.skills || []).map((s, idx) => (
-                  <span key={idx} className="badge badge-indigo">{s}</span>
-                ))}
-              </div>
-            </div>
-
-            <a
-              href={(() => {
-                let url = (selectedJob.application_url || '').trim();
-                const isInvalid = !url || !url.startsWith('http') || [
-                  'cognitivecloud', 'verve.tech', 'nexus-systems', 'mindlabs', 'techcraft', 'tndigital', 'apexai', 'vervesg'
-                ].some(d => url.includes(d));
-
-                if (isInvalid) {
-                  const comp = (selectedJob.company || '').toLowerCase();
-                  if (comp.includes('google')) return 'https://careers.google.com';
-                  if (comp.includes('meta')) return 'https://www.metacareers.com';
-                  if (comp.includes('amazon')) return 'https://amazon.jobs';
-                  if (comp.includes('openai')) return 'https://openai.com/careers';
-                  if (comp.includes('microsoft')) return 'https://careers.microsoft.com';
-                  if (comp.includes('zoho')) return 'https://www.zoho.com/careers/';
-                  if (comp.includes('freshworks')) return 'https://www.freshworks.com/company/careers/';
-                  if (comp.includes('stripe')) return 'https://stripe.com/jobs';
-                  if (comp.includes('razorpay')) return 'https://razorpay.com/jobs/';
-                  return 'https://remotive.com/remote-jobs';
-                }
-                return url;
-              })()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary"
-              style={{ width: '100%', justifyContent: 'center', padding: '14px', fontSize: '1rem', textDecoration: 'none' }}
-            >
-              Apply Directly on Company Portal 🚀
-            </a>
-          </div>
-        </div>
+        <JobDetailsModal
+          job={selectedJob}
+          onClose={() => setSelectedJob(null)}
+        />
       )}
+      </main>
 
       {/* Notifications Drawer Modal */}
       <NotificationsModal
