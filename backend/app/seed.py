@@ -11,7 +11,7 @@ SEED_JOBS = [
         "salary_range": "$140,000 - $185,000",
         "description": "Join our core engineering team to build scalable FastAPI services, integrate Gemini / Claude LLMs, and craft high-performance React user experiences.",
         "skills": ["Python", "FastAPI", "React", "TypeScript", "Docker", "PostgreSQL"],
-        "application_url": "https://careers.cognitivecloud.ai/apply/sr-ai-dev",
+        "application_url": "https://remotive.com/remote-jobs",
         "is_remote": True
     },
     {
@@ -23,7 +23,7 @@ SEED_JOBS = [
         "salary_range": "$120,000 - $150,000",
         "description": "Looking for a creative frontend engineer to build responsive dashboards, rich micro-animations, and real-time WebSocket visualizations.",
         "skills": ["React", "TypeScript", "TailwindCSS", "Next.js", "Redux", "REST API"],
-        "application_url": "https://verve.tech/careers/frontend",
+        "application_url": "https://remotive.com/remote-jobs",
         "is_remote": True
     },
     {
@@ -35,7 +35,7 @@ SEED_JOBS = [
         "salary_range": "$75 - $95 / hr",
         "description": "Architect async microservices using FastAPI, SQLAlchemy 2.0, Redis caching, and Kubernetes deployments.",
         "skills": ["Python", "FastAPI", "SQL", "Redis", "Docker", "Kubernetes", "AWS"],
-        "application_url": "https://nexus-systems.io/jobs/backend-contract",
+        "application_url": "https://remotive.com/remote-jobs",
         "is_remote": True
     },
     {
@@ -47,7 +47,7 @@ SEED_JOBS = [
         "salary_range": "$40 - $55 / hr",
         "description": "Exciting internship opportunity for students and recent grads to experiment with RAG architectures, PyTorch fine-tuning, and LLM evaluation benchmarks.",
         "skills": ["Python", "PyTorch", "Machine Learning", "Git", "REST API"],
-        "application_url": "https://mindlabs.ai/internships",
+        "application_url": "https://remotive.com/remote-jobs",
         "is_remote": False
     },
     {
@@ -59,7 +59,7 @@ SEED_JOBS = [
         "salary_range": "₹18,00,000 - ₹26,00,000 INR",
         "description": "Build high-speed web portals and async microservices for Indian enterprise clients. On-site 2 days a week in HSR Layout, Bangalore.",
         "skills": ["Python", "FastAPI", "React", "JavaScript", "SQL", "Docker"],
-        "application_url": "https://techcraft.in/careers",
+        "application_url": "https://www.google.com/search?q=apply+Full+Stack+Engineer+React+FastAPI+Bangalore",
         "is_remote": False
     },
     {
@@ -71,7 +71,7 @@ SEED_JOBS = [
         "salary_range": "₹14,00,000 - ₹22,00,000 INR",
         "description": "Develop high-scale backend APIs, PostgreSQL database schemas, and Redis caching layers for fintech applications in OMR Chennai.",
         "skills": ["Python", "FastAPI", "SQL", "PostgreSQL", "Git", "REST API"],
-        "application_url": "https://tndigital.in/jobs/chennai-backend",
+        "application_url": "https://www.google.com/search?q=apply+Backend+Microservices+Developer+Chennai",
         "is_remote": False
     },
     {
@@ -83,7 +83,7 @@ SEED_JOBS = [
         "salary_range": "₹28,00,000 - ₹38,00,000 INR",
         "description": "Lead computer vision and multimodal LLM integration for AI-powered autonomous systems. Flexible remote work across India.",
         "skills": ["Python", "PyTorch", "TensorFlow", "FastAPI", "Docker", "AWS"],
-        "application_url": "https://apexai.co.in/careers",
+        "application_url": "https://www.google.com/search?q=apply+AI+Computer+Vision+Engineer+Hyderabad",
         "is_remote": True
     },
     {
@@ -95,7 +95,7 @@ SEED_JOBS = [
         "salary_range": "$90,000 - $125,000 SGD",
         "description": "Craft responsive web dashboards, modern micro-animations, and WebSocket visualizations for regional Asia-Pacific markets.",
         "skills": ["React", "TypeScript", "TailwindCSS", "Next.js", "Redux"],
-        "application_url": "https://vervesg.tech/careers",
+        "application_url": "https://www.google.com/search?q=apply+Frontend+React+Developer+Singapore",
         "is_remote": False
     }
 ]
@@ -143,12 +143,14 @@ SEED_HACKATHONS = [
 ]
 
 def seed_database(db: Session):
-    # Ensure all SEED_JOBS are present in SQLite DB
+    # Ensure all SEED_JOBS are present and application_urls are updated in SQLite DB
     for job_data in SEED_JOBS:
         existing = db.query(Job).filter(Job.title == job_data["title"], Job.company == job_data["company"]).first()
         if not existing:
             job = Job(**job_data)
             db.add(job)
+        else:
+            existing.application_url = job_data["application_url"]
     db.commit()
 
     # Ensure all SEED_HACKATHONS are present in SQLite DB

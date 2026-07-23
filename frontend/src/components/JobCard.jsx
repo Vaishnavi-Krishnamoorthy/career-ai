@@ -94,8 +94,10 @@ export default function JobCard({ job, onSelect }) {
               className="btn-primary"
               onClick={(e) => {
                 e.stopPropagation();
-                const targetUrl = job.application_url && job.application_url.startsWith('http')
-                  ? job.application_url
+                const url = job.application_url || '';
+                const isDummy = ['cognitivecloud.ai', 'verve.tech', 'nexus-systems.io', 'mindlabs.ai', 'techcraft.in', 'tndigital.in', 'apexai.co.in', 'vervesg.tech'].some(d => url.includes(d));
+                const targetUrl = (url.startsWith('http') && !isDummy)
+                  ? url
                   : `https://www.google.com/search?q=${encodeURIComponent('apply ' + job.title + ' ' + job.company)}`;
                 window.open(targetUrl, '_blank', 'noopener,noreferrer');
               }}

@@ -117,7 +117,7 @@ class JobService:
                 "salary_range": "₹18,00,000 - ₹26,00,000 INR",
                 "description": "Build high-speed web portals and async microservices for Indian enterprise clients in HSR Layout Bangalore.",
                 "skills": ["Python", "FastAPI", "React", "JavaScript", "SQL"],
-                "application_url": "https://techcraft.in",
+                "application_url": "https://www.google.com/search?q=apply+Full+Stack+Engineer+React+FastAPI+Bangalore",
                 "is_remote": False,
                 "match_score": ai_service.calculate_match_score(candidate_skills or [], ["Python", "FastAPI", "React"]),
                 "created_at": "Today"
@@ -132,7 +132,7 @@ class JobService:
                 "salary_range": "₹14,00,000 - ₹22,00,000 INR",
                 "description": "Develop high-scale backend APIs, PostgreSQL schemas, and Redis caching layers for fintech apps in OMR Chennai.",
                 "skills": ["Python", "FastAPI", "SQL", "PostgreSQL", "Git"],
-                "application_url": "https://tndigital.in",
+                "application_url": "https://www.google.com/search?q=apply+Backend+Microservices+Developer+Chennai",
                 "is_remote": False,
                 "match_score": ai_service.calculate_match_score(candidate_skills or [], ["Python", "FastAPI", "SQL"]),
                 "created_at": "Yesterday"
@@ -147,7 +147,7 @@ class JobService:
                 "salary_range": "₹28,00,000 - ₹38,00,000 INR",
                 "description": "Lead computer vision and multimodal LLM integration for AI-powered autonomous systems.",
                 "skills": ["Python", "PyTorch", "TensorFlow", "FastAPI", "Docker"],
-                "application_url": "https://apexai.co.in",
+                "application_url": "https://www.google.com/search?q=apply+AI+Computer+Vision+Engineer+Hyderabad",
                 "is_remote": True,
                 "match_score": ai_service.calculate_match_score(candidate_skills or [], ["Python", "PyTorch", "FastAPI"]),
                 "created_at": "Today"
@@ -162,7 +162,7 @@ class JobService:
                 "salary_range": "$90,000 - $125,000 SGD",
                 "description": "Craft responsive web dashboards, modern micro-animations, and WebSocket visualizations for regional Asia-Pacific markets.",
                 "skills": ["React", "TypeScript", "TailwindCSS", "Next.js", "Redux"],
-                "application_url": "https://vervesg.tech",
+                "application_url": "https://www.google.com/search?q=apply+Frontend+React+Developer+Singapore",
                 "is_remote": False,
                 "match_score": ai_service.calculate_match_score(candidate_skills or [], ["React", "TypeScript", "TailwindCSS"]),
                 "created_at": "Just now"
@@ -177,7 +177,7 @@ class JobService:
                 "salary_range": "$135,000 - $175,000",
                 "description": "Architect async microservices, integrate Gemini LLMs, and lead React modern dashboard engineering.",
                 "skills": ["Python", "FastAPI", "React", "TypeScript", "Docker"],
-                "application_url": "https://remotive.com",
+                "application_url": "https://remotive.com/remote-jobs",
                 "is_remote": True,
                 "match_score": ai_service.calculate_match_score(candidate_skills or [], ["Python", "FastAPI", "React"]),
                 "created_at": "Today"
