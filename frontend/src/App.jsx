@@ -24,6 +24,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('jobs'); // 'jobs', 'matches', 'hackathons', 'ai'
   const [apiStatus, setApiStatus] = useState('checking');
   const [searchQuery, setSearchQuery] = useState('');
+  const [locationQuery, setLocationQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('All');
   
   const [jobs, setJobs] = useState([]);
@@ -60,7 +61,7 @@ export default function App() {
     });
   }, []);
 
-  // Load Data based on Tab & Search/Filter
+  // Load Data based on Tab & Search/Filter/Location
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
@@ -68,12 +69,14 @@ export default function App() {
         const data = await fetchJobs({
           search: searchQuery,
           job_type: selectedFilter,
+          location: locationQuery,
           user_skills: userSkills.join(',')
         });
         setJobs(data);
       } else if (activeTab === 'matches') {
         const extJobs = await fetchExternalJobs({
           search: searchQuery,
+          location: locationQuery,
           user_skills: userSkills.join(',')
         });
         setMatchedJobs(extJobs);
@@ -89,7 +92,7 @@ export default function App() {
     } finally {
       setLoading(false);
     }
-  }, [activeTab, searchQuery, selectedFilter, userSkills]);
+  }, [activeTab, searchQuery, locationQuery, selectedFilter, userSkills]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -190,6 +193,8 @@ export default function App() {
         activeTab={activeTab}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
+        locationQuery={locationQuery}
+        setLocationQuery={setLocationQuery}
         selectedFilter={selectedFilter}
         setSelectedFilter={setSelectedFilter}
       />

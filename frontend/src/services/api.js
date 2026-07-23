@@ -77,6 +77,7 @@ export async function fetchExternalJobs(params = {}) {
   try {
     const query = new URLSearchParams();
     if (params.search) query.append('search', params.search);
+    if (params.location) query.append('location', params.location);
     if (params.user_skills) {
       const skillsStr = Array.isArray(params.user_skills) ? params.user_skills.join(',') : params.user_skills;
       query.append('user_skills', skillsStr);

@@ -58,13 +58,14 @@ def parse_resume_text(request: ResumeAnalysisRequest):
 @router.get("/external-jobs")
 def get_external_jobs(
     search: Optional[str] = None,
+    location: Optional[str] = Query(None, description="Target city, country, or region (e.g. India, Bangalore, Singapore, Europe)"),
     user_skills: Optional[str] = Query(None, description="Comma-separated list of candidate skills")
 ):
     """
-    Retrieves live remote job listings from external Remotive Jobs API matched against candidate skills.
+    Retrieves live remote and regional job listings matched against candidate skills and target location.
     """
     skills_list = [s.strip() for s in user_skills.split(",")] if user_skills else []
-    return job_service.fetch_external_jobs(search=search, candidate_skills=skills_list)
+    return job_service.fetch_external_jobs(search=search, location=location, candidate_skills=skills_list)
 
 @router.post("/career-roadmap", response_model=CareerRoadmapResponse)
 def generate_roadmap(request: CareerRoadmapRequest):

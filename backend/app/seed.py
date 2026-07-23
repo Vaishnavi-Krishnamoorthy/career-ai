@@ -49,6 +49,54 @@ SEED_JOBS = [
         "skills": ["Python", "PyTorch", "Machine Learning", "Git", "REST API"],
         "application_url": "https://mindlabs.ai/internships",
         "is_remote": False
+    },
+    {
+        "title": "Full Stack Engineer (React & FastAPI)",
+        "company": "TechCraft India",
+        "location": "Bangalore, Karnataka, India (Hybrid)",
+        "job_type": "Full-time",
+        "experience_level": "Mid-Level",
+        "salary_range": "₹18,00,000 - ₹26,00,000 INR",
+        "description": "Build high-speed web portals and async microservices for Indian enterprise clients. On-site 2 days a week in HSR Layout, Bangalore.",
+        "skills": ["Python", "FastAPI", "React", "JavaScript", "SQL", "Docker"],
+        "application_url": "https://techcraft.in/careers",
+        "is_remote": False
+    },
+    {
+        "title": "Backend Microservices Developer",
+        "company": "TamilNadu Digital Systems",
+        "location": "Chennai, Tamil Nadu, India (On-Site)",
+        "job_type": "Full-time",
+        "experience_level": "Mid-Level",
+        "salary_range": "₹14,00,000 - ₹22,00,000 INR",
+        "description": "Develop high-scale backend APIs, PostgreSQL database schemas, and Redis caching layers for fintech applications in OMR Chennai.",
+        "skills": ["Python", "FastAPI", "SQL", "PostgreSQL", "Git", "REST API"],
+        "application_url": "https://tndigital.in/jobs/chennai-backend",
+        "is_remote": False
+    },
+    {
+        "title": "AI & Computer Vision Engineer",
+        "company": "Apex AI Systems",
+        "location": "Hyderabad, Telangana, India / Remote",
+        "job_type": "Full-time",
+        "experience_level": "Senior",
+        "salary_range": "₹28,00,000 - ₹38,00,000 INR",
+        "description": "Lead computer vision and multimodal LLM integration for AI-powered autonomous systems. Flexible remote work across India.",
+        "skills": ["Python", "PyTorch", "TensorFlow", "FastAPI", "Docker", "AWS"],
+        "application_url": "https://apexai.co.in/careers",
+        "is_remote": True
+    },
+    {
+        "title": "Frontend React & Web Specialist",
+        "company": "Verve Singapore Tech",
+        "location": "Singapore / Hybrid (APAC)",
+        "job_type": "Full-time",
+        "experience_level": "Senior",
+        "salary_range": "$90,000 - $125,000 SGD",
+        "description": "Craft responsive web dashboards, modern micro-animations, and WebSocket visualizations for regional Asia-Pacific markets.",
+        "skills": ["React", "TypeScript", "TailwindCSS", "Next.js", "Redux"],
+        "application_url": "https://vervesg.tech/careers",
+        "is_remote": False
     }
 ]
 
