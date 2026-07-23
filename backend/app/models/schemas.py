@@ -177,4 +177,27 @@ class EmailNotificationRequest(BaseModel):
     candidate_name: str
     matched_jobs: List[MatchedJobItem]
 
+class InterviewAnswerItem(BaseModel):
+    question_id: int
+    question: str
+    category: str
+    spoken_answer: str
+
+class InterviewEvaluationRequest(BaseModel):
+    target_role: str
+    experience_level: Optional[str] = "Mid-Level"
+    qa_pairs: List[InterviewAnswerItem]
+
+class InterviewEvaluationResponse(BaseModel):
+    target_role: str
+    overall_score: int
+    technical_depth_rating: int
+    communication_clarity_rating: int
+    pros: List[str]
+    cons: List[str]
+    areas_for_improvement: List[str]
+    recommended_topics: List[str]
+    detailed_feedback: str
+
+
 

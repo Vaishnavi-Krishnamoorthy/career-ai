@@ -183,3 +183,26 @@ def test_send_email_alert():
         assert data["status"] == "success"
         assert data["recipient"] == "candidate@example.com"
 
+def test_evaluate_interview():
+    with TestClient(app) as client:
+        payload = {
+            "target_role": "Senior Full Stack Engineer",
+            "experience_level": "Senior",
+            "qa_pairs": [
+                {
+                    "question_id": 1,
+                    "question": "How do you design scalable async APIs?",
+                    "category": "System Architecture",
+                    "spoken_answer": "I use FastAPI with Pydantic and async await routines, combined with Redis caching and PostgreSQL connection pooling to ensure high throughput."
+                }
+            ]
+        }
+        response = client.post("/api/v1/ai/evaluate-interview", json=payload)
+        assert response.status_code == 200
+        data = response.json()
+        assert "overall_score" in data
+        assert "pros" in data
+        assert "cons" in data
+        assert "areas_for_improvement" in data
+
+

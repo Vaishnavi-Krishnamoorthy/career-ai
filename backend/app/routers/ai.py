@@ -9,7 +9,9 @@ from app.models.schemas import (
     OCRResponse,
     InterviewPrepRequest,
     InterviewPrepResponse,
-    EmailNotificationRequest
+    EmailNotificationRequest,
+    InterviewEvaluationRequest,
+    InterviewEvaluationResponse
 )
 from app.services.ai_service import ai_service
 from app.services.job_service import job_service
@@ -95,4 +97,19 @@ def send_email_alert(request: EmailNotificationRequest):
         candidate_name=request.candidate_name or "Candidate",
         matched_jobs=jobs_dict
     )
+
+@router.post("/evaluate-interview", response_model=InterviewEvaluationResponse)
+def evaluate_interview(request: InterviewEvaluationRequest):
+    """
+    Evaluates candidate spoken interview session answers and returns scorecard with pros, cons, and recommendations.
+    """
+    if not request.qa_pairs or len(request.qa_pairs) == 0:
+        raise HTTPException(status_code=400, detail="At least one answered question is required for evaluation")
+    
+    return ai_service.evaluate_interview_session(
+        target_role=request.target_role,
+        experience_level=request.experience_level or "Mid-Level",
+        qa_pairs=request.qa_pairs
+    )
+
 
