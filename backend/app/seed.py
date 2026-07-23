@@ -4,98 +4,110 @@ from app.models.db_models import Job, Hackathon
 SEED_JOBS = [
     {
         "title": "Senior Full Stack AI Developer",
-        "company": "Cognitive Cloud AI",
+        "company": "Google Cloud AI",
         "location": "Remote (US/Global)",
         "job_type": "Full-time",
         "experience_level": "Senior",
         "salary_range": "$140,000 - $185,000",
-        "description": "Join our core engineering team to build scalable FastAPI services, integrate Gemini / Claude LLMs, and craft high-performance React user experiences.",
+        "description": "Join our core engineering team to build scalable FastAPI services, integrate Gemini LLMs, and craft high-performance React user experiences.",
         "skills": ["Python", "FastAPI", "React", "TypeScript", "Docker", "PostgreSQL"],
-        "application_url": "https://remotive.com/remote-jobs",
+        "application_url": "https://careers.google.com",
         "is_remote": True
     },
     {
         "title": "Frontend Engineer (React & Next.js)",
-        "company": "Verve Technologies",
+        "company": "Meta",
         "location": "San Francisco, CA / Hybrid",
         "job_type": "Full-time",
         "experience_level": "Mid-Level",
-        "salary_range": "$120,000 - $150,000",
-        "description": "Looking for a creative frontend engineer to build responsive dashboards, rich micro-animations, and real-time WebSocket visualizations.",
+        "salary_range": "$130,000 - $160,000",
+        "description": "Looking for a creative frontend engineer to build responsive web dashboards, rich micro-animations, and real-time WebSocket visualizations.",
         "skills": ["React", "TypeScript", "TailwindCSS", "Next.js", "Redux", "REST API"],
-        "application_url": "https://remotive.com/remote-jobs",
+        "application_url": "https://www.metacareers.com",
         "is_remote": True
     },
     {
         "title": "Backend Microservices Developer",
-        "company": "Nexus Systems",
+        "company": "Amazon Web Services",
         "location": "Austin, TX / Remote",
-        "job_type": "Contract",
+        "job_type": "Full-time",
         "experience_level": "Mid-Level",
-        "salary_range": "$75 - $95 / hr",
+        "salary_range": "$125,000 - $155,000",
         "description": "Architect async microservices using FastAPI, SQLAlchemy 2.0, Redis caching, and Kubernetes deployments.",
         "skills": ["Python", "FastAPI", "SQL", "Redis", "Docker", "Kubernetes", "AWS"],
-        "application_url": "https://remotive.com/remote-jobs",
+        "application_url": "https://amazon.jobs",
         "is_remote": True
     },
     {
-        "title": "AI Research & Systems Intern",
-        "company": "Mind Labs AI",
-        "location": "Boston, MA",
-        "job_type": "Internship",
-        "experience_level": "Entry",
-        "salary_range": "$40 - $55 / hr",
-        "description": "Exciting internship opportunity for students and recent grads to experiment with RAG architectures, PyTorch fine-tuning, and LLM evaluation benchmarks.",
+        "title": "AI Research & LLM Systems Specialist",
+        "company": "OpenAI",
+        "location": "San Francisco, CA / Remote",
+        "job_type": "Full-time",
+        "experience_level": "Senior",
+        "salary_range": "$160,000 - $220,000",
+        "description": "Exciting engineering role to experiment with RAG architectures, PyTorch fine-tuning, and multimodal LLM evaluation benchmarks.",
         "skills": ["Python", "PyTorch", "Machine Learning", "Git", "REST API"],
-        "application_url": "https://remotive.com/remote-jobs",
-        "is_remote": False
+        "application_url": "https://openai.com/careers",
+        "is_remote": True
     },
     {
         "title": "Full Stack Engineer (React & FastAPI)",
-        "company": "TechCraft India",
+        "company": "Zoho Corporation",
         "location": "Bangalore, Karnataka, India (Hybrid)",
         "job_type": "Full-time",
         "experience_level": "Mid-Level",
         "salary_range": "₹18,00,000 - ₹26,00,000 INR",
-        "description": "Build high-speed web portals and async microservices for Indian enterprise clients. On-site 2 days a week in HSR Layout, Bangalore.",
+        "description": "Build high-speed web portals and async microservices for enterprise cloud clients. On-site 2 days a week in Bangalore.",
         "skills": ["Python", "FastAPI", "React", "JavaScript", "SQL", "Docker"],
-        "application_url": "https://www.google.com/search?q=apply+Full+Stack+Engineer+React+FastAPI+Bangalore",
+        "application_url": "https://www.zoho.com/careers/",
         "is_remote": False
     },
     {
         "title": "Backend Microservices Developer",
-        "company": "TamilNadu Digital Systems",
+        "company": "Freshworks",
         "location": "Chennai, Tamil Nadu, India (On-Site)",
         "job_type": "Full-time",
         "experience_level": "Mid-Level",
-        "salary_range": "₹14,00,000 - ₹22,00,000 INR",
-        "description": "Develop high-scale backend APIs, PostgreSQL database schemas, and Redis caching layers for fintech applications in OMR Chennai.",
+        "salary_range": "₹15,00,000 - ₹24,00,000 INR",
+        "description": "Develop high-scale backend APIs, PostgreSQL database schemas, and Redis caching layers for SaaS applications in OMR Chennai.",
         "skills": ["Python", "FastAPI", "SQL", "PostgreSQL", "Git", "REST API"],
-        "application_url": "https://www.google.com/search?q=apply+Backend+Microservices+Developer+Chennai",
+        "application_url": "https://www.freshworks.com/company/careers/",
         "is_remote": False
     },
     {
         "title": "AI & Computer Vision Engineer",
-        "company": "Apex AI Systems",
+        "company": "Microsoft AI India",
         "location": "Hyderabad, Telangana, India / Remote",
         "job_type": "Full-time",
         "experience_level": "Senior",
         "salary_range": "₹28,00,000 - ₹38,00,000 INR",
         "description": "Lead computer vision and multimodal LLM integration for AI-powered autonomous systems. Flexible remote work across India.",
         "skills": ["Python", "PyTorch", "TensorFlow", "FastAPI", "Docker", "AWS"],
-        "application_url": "https://www.google.com/search?q=apply+AI+Computer+Vision+Engineer+Hyderabad",
+        "application_url": "https://careers.microsoft.com",
         "is_remote": True
     },
     {
         "title": "Frontend React & Web Specialist",
-        "company": "Verve Singapore Tech",
+        "company": "Stripe",
         "location": "Singapore / Hybrid (APAC)",
         "job_type": "Full-time",
         "experience_level": "Senior",
-        "salary_range": "$90,000 - $125,000 SGD",
+        "salary_range": "$95,000 - $130,000 SGD",
         "description": "Craft responsive web dashboards, modern micro-animations, and WebSocket visualizations for regional Asia-Pacific markets.",
         "skills": ["React", "TypeScript", "TailwindCSS", "Next.js", "Redux"],
-        "application_url": "https://www.google.com/search?q=apply+Frontend+React+Developer+Singapore",
+        "application_url": "https://stripe.com/jobs",
+        "is_remote": False
+    },
+    {
+        "title": "Full Stack Dev (Fintech Payments)",
+        "company": "Razorpay",
+        "location": "Bangalore, Karnataka, India",
+        "job_type": "Full-time",
+        "experience_level": "Mid-Level",
+        "salary_range": "₹20,00,000 - ₹30,00,000 INR",
+        "description": "Architect payment gateway APIs, secure authentication flows, and modern React dashboard components.",
+        "skills": ["Python", "FastAPI", "React", "PostgreSQL", "Redis"],
+        "application_url": "https://razorpay.com/jobs/",
         "is_remote": False
     }
 ]
@@ -143,7 +155,16 @@ SEED_HACKATHONS = [
 ]
 
 def seed_database(db: Session):
-    # Ensure all SEED_JOBS are present and application_urls are updated in SQLite DB
+    # Wipe old dummy jobs if present to ensure clean real enterprise company data
+    db.query(Job).filter(
+        (Job.company == "Cognitive Cloud AI") | 
+        (Job.company == "Verve Technologies") | 
+        (Job.company == "Nexus Systems") |
+        (Job.company == "TechCraft India")
+    ).delete(synchronize_session=False)
+    db.commit()
+
+    # Ensure all SEED_JOBS are present and updated in SQLite DB
     for job_data in SEED_JOBS:
         existing = db.query(Job).filter(Job.title == job_data["title"], Job.company == job_data["company"]).first()
         if not existing:
@@ -151,6 +172,8 @@ def seed_database(db: Session):
             db.add(job)
         else:
             existing.application_url = job_data["application_url"]
+            existing.company = job_data["company"]
+            existing.location = job_data["location"]
     db.commit()
 
     # Ensure all SEED_HACKATHONS are present in SQLite DB

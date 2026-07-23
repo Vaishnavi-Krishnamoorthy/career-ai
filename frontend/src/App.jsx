@@ -380,13 +380,10 @@ export default function App() {
             </div>
 
             <a
-              href={(() => {
-                const url = selectedJob.application_url || '';
-                const isDummy = ['cognitivecloud.ai', 'verve.tech', 'nexus-systems.io', 'mindlabs.ai', 'techcraft.in', 'tndigital.in', 'apexai.co.in', 'vervesg.tech'].some(d => url.includes(d));
-                return (url.startsWith('http') && !isDummy)
-                  ? url
-                  : `https://www.google.com/search?q=${encodeURIComponent('apply ' + selectedJob.title + ' ' + selectedJob.company)}`;
-              })()}
+              href={(selectedJob.application_url && selectedJob.application_url.startsWith('http'))
+                ? selectedJob.application_url
+                : `https://www.google.com/search?q=${encodeURIComponent('apply ' + selectedJob.title + ' ' + selectedJob.company)}`
+              }
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary"
