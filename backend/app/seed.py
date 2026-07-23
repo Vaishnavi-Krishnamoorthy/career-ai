@@ -143,18 +143,19 @@ SEED_HACKATHONS = [
 ]
 
 def seed_database(db: Session):
-    # Check if jobs exist
-    if db.query(Job).count() == 0:
-        for job_data in SEED_JOBS:
+    # Ensure all SEED_JOBS are present in SQLite DB
+    for job_data in SEED_JOBS:
+        existing = db.query(Job).filter(Job.title == job_data["title"], Job.company == job_data["company"]).first()
+        if not existing:
             job = Job(**job_data)
             db.add(job)
-        db.commit()
-        print("Database seeded with initial jobs!")
+    db.commit()
 
-    # Check if hackathons exist
-    if db.query(Hackathon).count() == 0:
-        for hack_data in SEED_HACKATHONS:
+    # Ensure all SEED_HACKATHONS are present in SQLite DB
+    for hack_data in SEED_HACKATHONS:
+        existing = db.query(Hackathon).filter(Hackathon.title == hack_data["title"]).first()
+        if not existing:
             hack = Hackathon(**hack_data)
             db.add(hack)
-        db.commit()
-        print("Database seeded with initial hackathons!")
+    db.commit()
+    print("Database seeded with regional jobs and hackathons!")

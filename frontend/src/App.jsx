@@ -65,21 +65,46 @@ export default function App() {
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      if (activeTab === 'jobs') {
-        const data = await fetchJobs({
-          search: searchQuery,
-          job_type: selectedFilter,
-          location: locationQuery,
-          user_skills: userSkills.join(',')
+      if (activeTab === 'jobs' || activeTab === 'matches') {
+        const [internalJobs, externalJobs] = await Promise.all([
+          fetchJobs({
+            search: searchQuery,
+            job_type: selectedFilter,
+            location: locationQuery,
+            user_skills: userSkills.join(',')
+          }).catch(() => []),
+          fetchExternalJobs({
+            search: searchQuery,
+            location: locationQuery,
+            user_skills: userSkills.join(',')
+          }).catch(() => [])
+        ]);
+
+        // Deduplicate and combine jobs
+        const seenTitles = new Set();
+        const combined = [];
+
+        [...internalJobs, ...externalJobs].forEach(j => {
+          const key = `${j.title?.toLowerCase()}_${j.company?.toLowerCase()}`;
+          if (!seenTitles.has(key)) {
+            seenTitles.add(key);
+            combined.push(j);
+          }
         });
-        setJobs(data);
-      } else if (activeTab === 'matches') {
-        const extJobs = await fetchExternalJobs({
-          search: searchQuery,
-          location: locationQuery,
-          user_skills: userSkills.join(',')
-        });
-        setMatchedJobs(extJobs);
+
+        // Filter by location query if provided
+        let finalJobs = combined;
+        if (locationQuery && locationQuery.trim().toLowerCase() !== 'all') {
+          const locL = locationQuery.trim().toLowerCase();
+          finalJobs = combined.filter(j => (
+            (j.location || '').toLowerCase().includes(locL) ||
+            (j.title || '').toLowerCase().includes(locL) ||
+            (j.company || '').toLowerCase().includes(locL)
+          ));
+        }
+
+        setJobs(finalJobs);
+        setMatchedJobs(finalJobs);
       } else if (activeTab === 'hackathons') {
         const data = await fetchHackathons({
           search: searchQuery,
