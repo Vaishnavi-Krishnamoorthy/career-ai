@@ -1,5 +1,25 @@
 
 export default function HackathonCard({ hackathon }) {
+  const getValidRegistrationUrl = (item) => {
+    const raw = (item.registration_url || item.apply_url || item.official_link || item.url || '').trim();
+    if (!raw || !raw.startsWith('http')) return null;
+
+    const isDummy = ['techcraft.org', 'sfhackforimpact.org', 'example.com', 'localhost'].some(d => raw.includes(d));
+    if (isDummy) {
+      const t = (item.title || '').toLowerCase();
+      if (t.includes('agent') || t.includes('ai') || t.includes('llm')) {
+        return 'https://devpost.com/hackathons';
+      }
+      if (t.includes('eth') || t.includes('impact') || t.includes('climate')) {
+        return 'https://ethglobal.com/events';
+      }
+      return 'https://mlh.io/seasons/2026/events';
+    }
+    return raw;
+  };
+
+  const validUrl = getValidRegistrationUrl(hackathon);
+
   return (
     <div className="glass-panel" style={{
       padding: '24px',
@@ -42,7 +62,7 @@ export default function HackathonCard({ hackathon }) {
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
           <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: '600' }}>
-            BY {hackathon.organizer.toUpperCase()}
+            BY {(hackathon.organizer || 'GLOBAL GUILD').toUpperCase()}
           </span>
           <span className="badge badge-emerald">
             🏆 {hackathon.prize_pool}
@@ -68,20 +88,30 @@ export default function HackathonCard({ hackathon }) {
           ))}
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-glass)', paddingTop: '14px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-glass)', paddingTop: '14px', flexWrap: 'wrap', gap: '10px' }}>
           <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
             📅 {hackathon.start_date} - {hackathon.end_date}
           </div>
 
-          <a
-            href={hackathon.registration_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-primary"
-            style={{ padding: '6px 14px', fontSize: '0.85rem', textDecoration: 'none' }}
-          >
-            Register Now 🚀
-          </a>
+          {validUrl ? (
+            <button
+              type="button"
+              onClick={() => window.open(validUrl, '_blank', 'noopener,noreferrer')}
+              className="btn-primary"
+              style={{ padding: '6px 14px', fontSize: '0.85rem', textDecoration: 'none' }}
+            >
+              Register Now 🚀
+            </button>
+          ) : (
+            <button
+              disabled
+              type="button"
+              className="btn-secondary"
+              style={{ opacity: 0.6, cursor: 'not-allowed', fontSize: '0.78rem', padding: '6px 10px' }}
+            >
+              Registration link is currently unavailable
+            </button>
+          )}
         </div>
       </div>
     </div>
