@@ -201,8 +201,15 @@ def test_evaluate_interview():
         assert response.status_code == 200
         data = response.json()
         assert "overall_score" in data
-        assert "pros" in data
-        assert "cons" in data
-        assert "areas_for_improvement" in data
+        assert "technical_knowledge_score" in data
+        assert "communication_score" in data
+        assert "confidence_score" in data
+        assert "strengths" in data
+        assert "weaknesses" in data
+        assert "missing_concepts" in data
+        assert "suggestions_for_improvement" in data
+        assert "question_evaluations" in data
+        assert len(data["question_evaluations"]) > 0
+        assert "ideal_answer" in data["question_evaluations"][0]
 
 

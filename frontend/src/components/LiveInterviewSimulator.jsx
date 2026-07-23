@@ -478,72 +478,127 @@ export default function LiveInterviewSimulator({ targetRole, experienceLevel, qu
             </p>
           </div>
 
-          {/* Rating Scores Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '32px' }}>
+          {/* Rating Scores Grid (4 Metrics) */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '16px', marginBottom: '32px' }}>
             <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '20px', borderRadius: '12px', textAlign: 'center', border: '1px solid var(--border-glass)' }}>
-              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Overall Performance</div>
-              <div style={{ fontSize: '2.4rem', fontWeight: '800', color: '#6ee7b7' }}>{evaluation.overall_score}%</div>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Overall Performance</div>
+              <div style={{ fontSize: '2.2rem', fontWeight: '800', color: '#6ee7b7' }}>{evaluation.overall_score}%</div>
             </div>
 
             <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '20px', borderRadius: '12px', textAlign: 'center', border: '1px solid var(--border-glass)' }}>
-              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Technical Depth</div>
-              <div style={{ fontSize: '2.4rem', fontWeight: '800', color: '#a5b4fc' }}>{evaluation.technical_depth_rating}%</div>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Technical Knowledge</div>
+              <div style={{ fontSize: '2.2rem', fontWeight: '800', color: '#a5b4fc' }}>{evaluation.technical_knowledge_score || evaluation.technical_depth_rating}%</div>
             </div>
 
             <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '20px', borderRadius: '12px', textAlign: 'center', border: '1px solid var(--border-glass)' }}>
-              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Communication Clarity</div>
-              <div style={{ fontSize: '2.4rem', fontWeight: '800', color: '#38bdf8' }}>{evaluation.communication_clarity_rating}%</div>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Communication Score</div>
+              <div style={{ fontSize: '2.2rem', fontWeight: '800', color: '#38bdf8' }}>{evaluation.communication_score || evaluation.communication_clarity_rating}%</div>
+            </div>
+
+            <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '20px', borderRadius: '12px', textAlign: 'center', border: '1px solid var(--border-glass)' }}>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Confidence Score</div>
+              <div style={{ fontSize: '2.2rem', fontWeight: '800', color: '#f472b6' }}>{evaluation.confidence_score || 85}%</div>
             </div>
           </div>
 
-          {/* Pros, Cons & Improvements Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '32px' }}>
+          {/* Pros & Weaknesses Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', marginBottom: '32px' }}>
             
-            {/* Pros / Strengths */}
+            {/* Strengths */}
             <div style={{ background: 'rgba(16, 185, 129, 0.05)', padding: '24px', borderRadius: '12px', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
-              <h4 style={{ color: '#6ee7b7', fontSize: '1.1rem', fontWeight: '700', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                ✅ Key Strengths & Pros ({evaluation.pros?.length || 0})
+              <h4 style={{ color: '#6ee7b7', fontSize: '1.1rem', fontWeight: '700', marginBottom: '14px' }}>
+                ✅ Key Strengths
               </h4>
               <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: '1.7' }}>
-                {(evaluation.pros || []).map((pro, pIdx) => (
+                {(evaluation.strengths || evaluation.pros || []).map((pro, pIdx) => (
                   <li key={pIdx} style={{ marginBottom: '8px' }}>{pro}</li>
                 ))}
               </ul>
             </div>
 
-            {/* Cons / Weaknesses */}
+            {/* Weaknesses */}
             <div style={{ background: 'rgba(244, 114, 182, 0.05)', padding: '24px', borderRadius: '12px', border: '1px solid rgba(244, 114, 182, 0.2)' }}>
-              <h4 style={{ color: '#f472b6', fontSize: '1.1rem', fontWeight: '700', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                ⚠️ Cons & Areas of Friction ({evaluation.cons?.length || 0})
+              <h4 style={{ color: '#f472b6', fontSize: '1.1rem', fontWeight: '700', marginBottom: '14px' }}>
+                ⚠️ Weaknesses & Friction Points
               </h4>
               <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: '1.7' }}>
-                {(evaluation.cons || []).map((con, cIdx) => (
+                {(evaluation.weaknesses || evaluation.cons || []).map((con, cIdx) => (
                   <li key={cIdx} style={{ marginBottom: '8px' }}>{con}</li>
                 ))}
               </ul>
             </div>
           </div>
 
-          {/* Actionable Areas to Improve */}
+          {/* Missing Concepts & Suggestions for Improvement */}
           <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '24px', borderRadius: '12px', border: '1px solid var(--border-glass)', marginBottom: '32px' }}>
             <h4 style={{ color: '#fcd34d', fontSize: '1.1rem', fontWeight: '700', marginBottom: '14px' }}>
-              💡 Actionable Recommendations & Areas for Improvement
+              💡 Suggestions for Improvement & Missing Concepts
             </h4>
-            <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: '1.7', marginBottom: '20px' }}>
-              {(evaluation.areas_for_improvement || []).map((item, iIdx) => (
+
+            {evaluation.missing_concepts && evaluation.missing_concepts.length > 0 && (
+              <div style={{ marginBottom: '16px' }}>
+                <h5 style={{ fontSize: '0.88rem', color: '#fcd34d', fontWeight: '700', marginBottom: '8px' }}>🎯 Missing Concepts to Address:</h5>
+                <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                  {evaluation.missing_concepts.map((mc, mIdx) => (
+                    <li key={mIdx} style={{ marginBottom: '6px' }}>{mc}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: '1.7' }}>
+              {(evaluation.suggestions_for_improvement || evaluation.areas_for_improvement || []).map((item, iIdx) => (
                 <li key={iIdx} style={{ marginBottom: '8px' }}>🚀 {item}</li>
               ))}
             </ul>
-
-            <h5 style={{ fontSize: '0.9rem', color: '#a5b4fc', fontWeight: '700', marginBottom: '8px' }}>Recommended Study Topics:</h5>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-              {(evaluation.recommended_topics || []).map((topic, tIdx) => (
-                <span key={tIdx} className="badge badge-indigo">{topic}</span>
-              ))}
-            </div>
           </div>
 
-          <div style={{ textAlignment: 'center', display: 'flex', justifyContent: 'center', gap: '16px' }}>
+          {/* Per-Question Detailed Breakdown & AI Ideal Answers */}
+          {evaluation.question_evaluations && evaluation.question_evaluations.length > 0 && (
+            <div style={{ marginBottom: '32px' }}>
+              <h3 style={{ fontSize: '1.3rem', fontWeight: '800', marginBottom: '16px', color: 'var(--text-primary)' }}>
+                📋 Detailed Question-by-Question Evaluation & AI Ideal Answers
+              </h3>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {evaluation.question_evaluations.map((qEval, qIdx) => (
+                  <div
+                    key={qIdx}
+                    style={{
+                      background: 'rgba(15, 23, 42, 0.6)',
+                      border: '1px solid var(--border-glass)',
+                      padding: '20px',
+                      borderRadius: '14px'
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                      <span className="badge badge-indigo" style={{ fontSize: '0.8rem' }}>
+                        Question {qIdx + 1} • {qEval.category}
+                      </span>
+                      <span className="badge badge-emerald" style={{ fontSize: '0.85rem', fontWeight: '700' }}>
+                        Score: {qEval.score}%
+                      </span>
+                    </div>
+
+                    <h4 style={{ fontSize: '1.05rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '8px' }}>
+                      {qEval.question}
+                    </h4>
+
+                    <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '12px', borderRadius: '8px', marginBottom: '12px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                      <strong style={{ color: '#a5b4fc' }}>Your Response:</strong> "{qEval.user_answer}"
+                    </div>
+
+                    <div style={{ background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%)', border: '1px solid rgba(99, 102, 241, 0.25)', padding: '14px', borderRadius: '10px', fontSize: '0.9rem', lineHeight: '1.6', color: '#e2e8f0' }}>
+                      <strong style={{ color: '#6ee7b7', display: 'block', marginBottom: '4px' }}>🌟 AI Synthesized Ideal Answer:</strong>
+                      {qEval.ideal_answer}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
             <button onClick={() => { setEvaluation(null); setCurrentIdx(0); setAnswers({}); }} className="btn-primary" style={{ padding: '12px 24px' }}>
               🔄 Start New Practice Session
             </button>

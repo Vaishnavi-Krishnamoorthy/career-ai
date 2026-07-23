@@ -192,15 +192,28 @@ class InterviewEvaluationRequest(BaseModel):
     experience_level: Optional[str] = "Mid-Level"
     qa_pairs: List[InterviewAnswerItem]
 
+class PerQuestionEvaluation(BaseModel):
+    question_id: int
+    question: str
+    category: str
+    user_answer: str
+    score: int
+    strengths: List[str] = []
+    weaknesses: List[str] = []
+    missing_concepts: List[str] = []
+    ideal_answer: str
+
 class InterviewEvaluationResponse(BaseModel):
     target_role: str
     overall_score: int
-    technical_depth_rating: int
-    communication_clarity_rating: int
-    pros: List[str]
-    cons: List[str]
-    areas_for_improvement: List[str]
-    recommended_topics: List[str]
+    technical_knowledge_score: int
+    communication_score: int
+    confidence_score: int
+    strengths: List[str]
+    weaknesses: List[str]
+    missing_concepts: List[str]
+    suggestions_for_improvement: List[str]
+    question_evaluations: List[PerQuestionEvaluation] = []
     detailed_feedback: str
 
 
