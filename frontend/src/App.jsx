@@ -380,7 +380,10 @@ export default function App() {
             </div>
 
             <a
-              href={selectedJob.application_url}
+              href={selectedJob.application_url && selectedJob.application_url.startsWith('http')
+                ? selectedJob.application_url
+                : `https://www.google.com/search?q=${encodeURIComponent('apply ' + selectedJob.title + ' ' + selectedJob.company)}`
+              }
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary"

@@ -79,9 +79,31 @@ export default function JobCard({ job, onSelect }) {
             💰 {job.salary_range || 'Competitive'}
           </span>
           
-          <button className="btn-secondary" style={{ padding: '6px 14px', fontSize: '0.85rem' }}>
-            View & Apply →
-          </button>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button
+              className="btn-secondary"
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect(job);
+              }}
+              style={{ padding: '6px 12px', fontSize: '0.82rem' }}
+            >
+              Details
+            </button>
+            <button
+              className="btn-primary"
+              onClick={(e) => {
+                e.stopPropagation();
+                const targetUrl = job.application_url && job.application_url.startsWith('http')
+                  ? job.application_url
+                  : `https://www.google.com/search?q=${encodeURIComponent('apply ' + job.title + ' ' + job.company)}`;
+                window.open(targetUrl, '_blank', 'noopener,noreferrer');
+              }}
+              style={{ padding: '6px 14px', fontSize: '0.85rem' }}
+            >
+              Apply 🚀
+            </button>
+          </div>
         </div>
       </div>
     </div>
